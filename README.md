@@ -9,15 +9,16 @@ This project is a high-fidelity Human-Machine Interface (HMI) modeling modern Ma
 ## 🎓 Academic Details
 * **Course:** MN204 HMI (Human-Machine Interface)
 * **Professor:** Dr. Pradipta Biswas, PhD (Associate Professor, Indian Institute of Science)
-* **Submitted By:** Abha Singh Sardar (SR. No. 28076)
+* **Submitted By:** Abha Singh Sardar (SR. No. 27086)
 * **Institution:** Indian Institute of Science (IISc)
 
-## 🔒 Authorized User Credentials
-To access the dashboard, operators must clear the initial OSHA Safety Checkpoint using one of the following whitelisted credentials. The `Employee ID` requires an exact 6-character uppercase format.
+## 🔐 Credentials & Authentication
 
-| Employee ID | Access Code (Password) | Role / Shift Alignment |
-| :--- | :--- | :--- |
-| **A28076** | **`Shift#1A`** | Senior Operations (Day Shift) |
+For security compliance, the HMI is locked behind a strict authentication portal. Use the following whitelisted operator credentials to access the production dashboard:
+
+| Employee ID | Access Code/Shift | Authorization Level |
+|-------------|------------|---------------------|
+| **A27086** | **`Shift#1A`** | Senior Operations (Day Shift) |
 | **B99452** | **`Auth&99B`** | Plant Manager (Swing Shift) |
 | **C10293** | **`Ctrl!44C`** | QA Auditor (Night Shift) |
 | **M44556** | **`Maint@12M`** | Maintenance Lead |

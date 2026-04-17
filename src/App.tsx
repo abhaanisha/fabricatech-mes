@@ -245,7 +245,7 @@ export default function App() {
   };
 
   const WHITELIST: Record<string, string> = {
-    "A28076": "Shift#1A",
+    "A27086": "Shift#1A",
     "B39124": "Line@2B",
     "C47801": "Press#3C",
     "D56392": "Build@4D",
@@ -455,13 +455,13 @@ export default function App() {
 
             {isAuthenticated && (
               <div className="hidden md:flex items-center gap-3 pl-4 border-l border-slate-700">
-                <div className="flex items-center gap-1">
-                  <span className="text-[11px] font-mono opacity-50">OPERATOR:</span>
-                  <span className="text-[11px] font-mono font-bold text-emerald-400">{employeeId}</span>
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-sm font-mono font-bold uppercase tracking-wide ${theme === "dark" ? "text-slate-400" : "text-slate-500"}`}>OPERATOR:</span>
+                  <span className="text-sm font-mono font-bold text-emerald-400">{employeeId}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-[11px] font-mono opacity-50">SHIFT:</span>
-                  <span className="text-[11px] font-mono font-bold uppercase text-amber-400">{selectedShift}</span>
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-sm font-mono font-bold uppercase tracking-wide ${theme === "dark" ? "text-slate-400" : "text-slate-500"}`}>SHIFT:</span>
+                  <span className="text-sm font-mono font-bold uppercase text-amber-400">{selectedShift}</span>
                 </div>
               </div>
             )}
@@ -637,13 +637,13 @@ export default function App() {
 
                     {/* Employee ID */}
                     <div>
-                      <label className={`block text-[11px] font-mono mb-1.5 uppercase tracking-wide font-bold ${dk ? "text-slate-400" : "text-slate-600"}`}>Employee ID (e.g., A28076)</label>
+                      <label className={`block text-[11px] font-mono mb-1.5 uppercase tracking-wide font-bold ${dk ? "text-slate-400" : "text-slate-600"}`}>Employee ID (e.g., A27086)</label>
                       <input
                         type="text"
                         value={employeeId}
                         maxLength={6}
                         onChange={(e) => { setEmployeeId(e.target.value.toUpperCase()); validateField("employeeId", e.target.value.toUpperCase()); }}
-                        placeholder="A28076"
+                        placeholder="A27086"
                         className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${validationErrors.employeeId ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
                       />
                       {validationErrors.employeeId && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {validationErrors.employeeId}</p>}
@@ -1420,7 +1420,7 @@ export default function App() {
 
               <div className="space-y-4">
                 {[
-                  { q: "What is my Employee ID and how do I log in?", a: "To log in securely onto the shift platform, use your assigned 6-character alphanumeric Employee ID (e.g., A28076) and matching Access Code. Only whitelisted users are accepted." },
+                  { q: "What is my Employee ID and how do I log in?", a: "To log in securely onto the shift platform, use your assigned 6-character alphanumeric Employee ID (e.g., A27086) and matching Access Code. Only whitelisted users are accepted." },
                   { q: "What is the primary application workflow?", a: "A standard shift proceeds as follows: First, review telemetry on the Dashboard. Then click 'NEW WO' to generate a Work Order. After processing, go to Quality Assurance to audit the part. If a part fails, it triggers a machine safety lockout." },
                   { q: "How do I clear a Safety Lockout (LOTO)?", a: "When an audit fails, navigate to the SAFETY CONTROL page. The faulty machine will be listed under Active Lockouts. After physical verification is complete, click 'Resolve & Unlock' to reset the job status and bring the machine back online." },
                   { q: "How do I switch interface themes?", a: "Click the Sun/Moon icon in the top right corner of the application to seamlessly toggle between the dark high-contrast mode and the light industrial mode. All charts will automatically adjust to the setting." },
@@ -1456,7 +1456,7 @@ export default function App() {
 
         <div className="text-[10px] md:text-[11px] text-right leading-relaxed flex flex-col items-end justify-end">
           <strong className={dk ? "text-violet-400 md:text-xs" : "text-violet-700 md:text-xs"}>Abha Singh Sardar</strong>
-          <span className="opacity-80 font-bold">SR No. 28076</span>
+          <span className="opacity-80 font-bold">SR No. 27086</span>
         </div>
       </footer>
 
