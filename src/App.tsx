@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ShieldCheck,
   AlertTriangle,
@@ -134,6 +134,47 @@ export default function App() {
     }, 1500);
     return () => clearInterval(interval);
   }, []);
+
+  // Vanta.js Animated Background logic
+  const vantaRef = useRef<HTMLDivElement>(null);
+  const [vantaEffect, setVantaEffect] = useState<any>(0);
+
+  useEffect(() => {
+    const showVanta = currentPage === "safety" || currentPage === "register";
+
+    if (showVanta && !vantaEffect && (window as any).VANTA) {
+      setVantaEffect(
+        (window as any).VANTA.NET({
+          el: vantaRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x00c8e0, // Bright cyan nodes matching our accent
+          backgroundColor: theme === "dark" ? 0x0f172a : 0xf8fafc, // Base slate matching our theme
+          points: 12.00,
+          maxDistance: 22.00,
+          spacing: 16.00,
+          showDots: true
+        })
+      );
+    }
+
+    // Update background color dynamically when theme toggles
+    if (showVanta && vantaEffect) {
+      vantaEffect.setOptions({
+        backgroundColor: theme === "dark" ? 0x0f172a : 0xf8fafc
+      });
+    }
+
+    if (!showVanta && vantaEffect) {
+      vantaEffect.destroy();
+      setVantaEffect(0);
+    }
+  }, [currentPage, theme, vantaEffect]);
 
   // Password Checklist Real-time checks
   const passwordCriteria = {
@@ -373,7 +414,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen font-sans transition-colors duration-300 flex flex-col ${dk ? "bg-[#0b0f17] text-slate-100" : "bg-slate-100 text-slate-900"
+    <div ref={vantaRef} className={`min-h-screen font-sans transition-colors duration-300 flex flex-col relative ${dk ? "bg-[#0f172a] text-slate-100" : "bg-slate-50 text-slate-900"
       }`}>
 
       {/* Dynamic Notification Toast */}
@@ -507,7 +548,7 @@ export default function App() {
         )}
 
         {/* PAGE CONTENT */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto relative z-10 p-0">
 
           {/* PAGE 1: SAFETY CHECKPOINT (LOGIN) */}
           {currentPage === "safety" && (
