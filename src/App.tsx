@@ -60,6 +60,7 @@ export default function App() {
   const [accessCode, setAccessCode] = useState("");
   const [selectedShift, setSelectedShift] = useState<ShiftType>("day");
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [safetyAcknowledged, setSafetyAcknowledged] = useState(false);
 
   // Registration state
   const [registeredUsers, setRegisteredUsers] = useState<Record<string, string>>({});
@@ -316,6 +317,12 @@ export default function App() {
   };
 
   const handleLogin = () => {
+    // Block login if safety declaration not acknowledged
+    if (!safetyAcknowledged) {
+      showNotification("⚠ SAFETY ALERT: You must acknowledge the OSHA Safety Declaration before accessing the system.", "warning");
+      return;
+    }
+
     const idValid = validateField("employeeId", employeeId);
     const codeValid = validateField("accessCode", accessCode);
 
@@ -599,7 +606,38 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-4 border-t border-slate-800/30 text-[11px] opacity-50 flex items-center gap-2">
+                  {/* Safety Declaration Checkbox */}
+                  <div className={`mt-6 p-4 rounded-2xl border ${safetyAcknowledged ? "border-emerald-500/40 bg-emerald-500/10" : "border-amber-500/40 bg-amber-500/5"} transition-all`}>
+                    <label className="flex items-start gap-3 cursor-pointer select-none group">
+                      <input
+                        type="checkbox"
+                        checked={safetyAcknowledged}
+                        onChange={(e) => setSafetyAcknowledged(e.target.checked)}
+                        className="sr-only"
+                      />
+                      <div className={`mt-0.5 w-5 h-5 flex-shrink-0 rounded border-2 flex items-center justify-center transition-all ${
+                        safetyAcknowledged
+                          ? "bg-emerald-500 border-emerald-500"
+                          : "border-amber-400 bg-transparent group-hover:border-amber-300"
+                      }`}>
+                        {safetyAcknowledged && (
+                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
+                      <div>
+                        <p className={`text-sm font-bold leading-snug ${safetyAcknowledged ? "text-emerald-400" : "text-amber-300"}`}>
+                          I acknowledge all safety protocols
+                        </p>
+                        <p className="text-[11px] opacity-70 mt-0.5 leading-relaxed">
+                          I confirm I am wearing all required PPE and have read the active hazard briefing for Line A3.
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-slate-800/30 text-[11px] opacity-50 flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4" /> Authorized Access Portal. Logins are logged per OSHA regulations.
                   </div>
                 </div>
@@ -765,12 +803,12 @@ export default function App() {
                   {/* Department */}
                   <div>
                     <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Department</label>
-                    <select value={regDept} onChange={(e) => { 
-                        const v = e.target.value; 
-                        setRegDept(v); 
-                        setRegRole(""); // Reset role when dept changes
-                        validateRegField("regDept", v); 
-                      }}
+                    <select value={regDept} onChange={(e) => {
+                      const v = e.target.value;
+                      setRegDept(v);
+                      setRegRole(""); // Reset role when dept changes
+                      validateRegField("regDept", v);
+                    }}
                       className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all ${regErrors.regDept ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
                     >
                       <option value="">Select department…</option>
@@ -965,11 +1003,10 @@ export default function App() {
                               </span>
                             </td>
                             <td>
-                              <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${
-                                wo.status === "pending" ? "text-amber-400 border-amber-500/30 bg-amber-500/10" :
+                              <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${wo.status === "pending" ? "text-amber-400 border-amber-500/30 bg-amber-500/10" :
                                 wo.status === "inspected" ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" :
-                                wo.status === "resolved" ? "text-blue-400 border-blue-500/30 bg-blue-500/10" :
-                                "text-red-400 border-red-500/30 bg-red-500/10"}`}>
+                                  wo.status === "resolved" ? "text-blue-400 border-blue-500/30 bg-blue-500/10" :
+                                    "text-red-400 border-red-500/30 bg-red-500/10"}`}>
                                 {wo.status.toUpperCase()}
                               </span>
                             </td>
@@ -1445,7 +1482,7 @@ export default function App() {
       <footer className={`border-t p-3 lg:p-4 text-center font-mono tracking-wider flex flex-col md:flex-row justify-between items-center gap-3 relative z-10 ${dk ? "border-slate-800/80 bg-slate-900/90 text-slate-400" : "border-slate-200 bg-white text-slate-500 shadow-[0_-4px_10px_rgba(0,0,0,0.02)]"}`}>
         <div className="text-[10px] md:text-[11px] text-left leading-relaxed">
           <span className="font-bold">MN204 HMI</span><br />
-          <span className="opacity-80">Dr. Pradipta Biswas</span><br />
+          <span className="opacity-80">Prof. Pradipta Biswas</span><br />
           <strong className={dk ? "text-cyan-400 md:text-xs" : "text-cyan-700 md:text-xs"}>Indian Institute of Science</strong>
         </div>
 

@@ -37,21 +37,7 @@ Use any of the following pre-authorized credentials at the Safety Checkpoint:
 
 The HMI follows a strict, linear industrial workflow across **7 distinct pages**:
 
-```
-[ Login / Safety Checkpoint ]
-        ↓  (authenticated)
-[ Production Dashboard ]  ←────────────────────────────┐
-        ↓                                               │
-[ Work Order Creation ]  →  Queues a new job            │
-        ↓                                               │
-[ Quality Assurance Audit ]  →  Pass / Fail the job     │
-        ↓ (on Fail)                                     │
-[ Safety Control / LOTO ]  →  Resolve machine lockout   │
-        ↓ (resolved)                                    │
-[ Shift Analytics Report ]  →  View full shift summary ─┘
-        
-[ Help & FAQ ]  →  Available at any time
-```
+![Application Flow](hmi_flow.png)
 
 ### Step-by-Step
 
