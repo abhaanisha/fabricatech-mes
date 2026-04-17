@@ -94,7 +94,6 @@ export default function App() {
 
   // Theme helpers — computed from theme state
   const dk = theme === "dark";
-  const card = dk ? "bg-slate-900/40 border-slate-800/50" : "bg-white border-slate-200";
   const inputCls = dk ? "bg-slate-800/40 text-slate-100 placeholder:text-slate-500" : "bg-slate-50 text-slate-900 placeholder:text-slate-400";
   const divider = dk ? "border-slate-800" : "border-slate-200";
   const panelBg = dk ? "bg-slate-800/30 border-slate-700/50" : "bg-slate-100 border-slate-200";
