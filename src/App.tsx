@@ -511,7 +511,7 @@ export default function App() {
               <div className={`w-full max-w-[1000px] grid lg:grid-cols-[1.1fr_0.9fr] rounded-3xl overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.3)] backdrop-blur-sm ${dk ? "bg-slate-900 border border-slate-800/50" : "bg-white border border-slate-200"}`}>
 
                 {/* Left: Safety Briefing Panel */}
-                <div className={`p-10 flex flex-col justify-between text-slate-100 ${dk ? "bg-slate-900/80" : "bg-[#0f172a]"}`}>
+                <div className={`p-10 flex flex-col justify-between text-slate-100 ${dk ? "bg-slate-900/80" : "bg-gradient-to-br from-indigo-950 to-slate-900"}`}>
                   <div>
                     <div className="flex items-center gap-3 mb-6">
                       <HardHat className="w-8 h-8 text-amber-500" />
@@ -556,16 +556,16 @@ export default function App() {
                 </div>
 
                 {/* Right: Authentication Form */}
-                <div className={`p-10 flex flex-col justify-center ${dk ? "bg-slate-900" : "bg-[#f0f2f5] text-slate-800"}`}>
+                <div className={`p-10 flex flex-col justify-center ${dk ? "bg-slate-900 text-slate-100" : "bg-white text-slate-900"}`}>
                   <div className="space-y-4">
                     <div>
-                      <h2 className="text-xl font-bold">Operator Shift Check-In</h2>
-                      <p className="text-xs opacity-60 mt-1">Enter credentials to unlock production interface.</p>
+                      <h2 className="text-2xl font-extrabold tracking-tight">Operator Shift Check-In</h2>
+                      <p className={`text-sm mt-1 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>Enter credentials to unlock production interface.</p>
                     </div>
 
                     {/* Shift Selector */}
                     <div>
-                      <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Select Your Shift</label>
+                      <label className={`block text-[11px] font-mono mb-2 uppercase tracking-wide font-bold ${dk ? "text-slate-400" : "text-slate-600"}`}>Select Your Shift</label>
                       <div className="grid grid-cols-3 gap-2">
                         {(["day", "swing", "night"] as ShiftType[]).map((s) => (
                           <label key={s} className="relative cursor-pointer">
@@ -588,7 +588,7 @@ export default function App() {
 
                     {/* Employee ID */}
                     <div>
-                      <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Employee ID (e.g., A28076)</label>
+                      <label className={`block text-[11px] font-mono mb-1.5 uppercase tracking-wide font-bold ${dk ? "text-slate-400" : "text-slate-600"}`}>Employee ID (e.g., A28076)</label>
                       <input
                         type="text"
                         value={employeeId}
@@ -602,7 +602,7 @@ export default function App() {
 
                     {/* Access Code */}
                     <div>
-                      <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Access Code (Password)</label>
+                      <label className={`block text-[11px] font-mono mb-1.5 uppercase tracking-wide font-bold ${dk ? "text-slate-400" : "text-slate-600"}`}>Access Code (Password)</label>
                       <input
                         type="password"
                         value={accessCode}
@@ -619,9 +619,9 @@ export default function App() {
                           [passwordCriteria.hasSpecial, "At least 1 special character (!@#$%^&*)"],
                           [passwordCriteria.noSpaces, "No blank spaces"],
                         ].map(([ok, label], i) => (
-                          <div key={i} className="flex items-center gap-2">
-                            {ok ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <XCircle className="w-3.5 h-3.5 text-slate-500" />}
-                            <span className={ok ? "text-emerald-400" : "opacity-60"}>{String(label)}</span>
+                          <div key={i} className="flex items-center gap-2.5">
+                            {ok ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <XCircle className="w-4 h-4 text-slate-400" />}
+                            <span className={`font-semibold ${ok ? "text-emerald-500" : dk ? "text-slate-400" : "text-slate-500"}`}>{String(label)}</span>
                           </div>
                         ))}
                       </div>
@@ -630,7 +630,7 @@ export default function App() {
                     <button
                       onClick={handleLogin}
                       disabled={!passwordCriteria.length || !passwordCriteria.hasUpper || !passwordCriteria.hasLower || !passwordCriteria.hasSpecial || !passwordCriteria.noSpaces}
-                      className="w-full mt-4 py-3.5 rounded-xl bg-[#e8701a] hover:bg-[#d06015] text-white font-bold text-xs tracking-wider shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full mt-4 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-sm tracking-widest shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       AUTHENTICATE & ACCESS SYSTEM
                     </button>
