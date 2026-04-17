@@ -414,8 +414,13 @@ export default function App() {
   };
 
   return (
-    <div ref={vantaRef} className={`min-h-screen font-sans transition-colors duration-300 flex flex-col relative ${dk ? "bg-[#0f172a] text-slate-100" : "bg-slate-50 text-slate-900"
+    <div className={`min-h-screen font-sans transition-colors duration-300 flex flex-col relative ${dk ? "bg-[#0f172a] text-slate-100" : "bg-slate-50 text-slate-900"
       }`}>
+
+      {/* Dynamic Vanta Background strictly isolated to Auth screens */}
+      {(currentPage === "safety" || currentPage === "register") && (
+        <div ref={vantaRef} className="fixed inset-0 z-0" />
+      )}
 
       {/* Dynamic Notification Toast */}
       {notification && (
