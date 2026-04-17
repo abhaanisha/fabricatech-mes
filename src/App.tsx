@@ -1037,16 +1037,16 @@ export default function App() {
           {/* PAGE 3: WORK ORDER CREATION */}
           {currentPage === "workorder" && isAuthenticated && (
             <div className="p-6 max-w-[900px] mx-auto space-y-6">
-              <div className="border-b border-slate-800 pb-4">
-                <h2 className="text-2xl font-bold tracking-tight">Assign Production Job</h2>
-                <p className="text-xs opacity-60 mt-1">Deploy batch controls onto Line A3 ERP queue.</p>
+              <div className={`border-b pb-5 ${divider}`}>
+                <h2 className="text-3xl font-black tracking-tight">Assign Production Job</h2>
+                <p className={`text-sm mt-1 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>Deploy batch controls onto Line A3 ERP queue.</p>
               </div>
 
-              <div className={`p-6 rounded-2xl border space-y-5 ${card}`}>
+              <div className={`p-6 rounded-2xl border space-y-5 shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
 
                 {/* Part Number input with custom validation */}
                 <div>
-                  <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">
+                  <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>
                     Part Number (Format: AB-1234 or ABC-1234X)
                   </label>
                   <input
@@ -1067,7 +1067,7 @@ export default function App() {
 
                 {/* Batch Code */}
                 <div>
-                  <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">
+                  <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>
                     Batch Control Code (Alphanumeric & Hyphens only)
                   </label>
                   <input
@@ -1088,7 +1088,7 @@ export default function App() {
 
                 {/* Priority Radios */}
                 <div>
-                  <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Job Urgency Priority</label>
+                  <label className={`block text-[12px] font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Job Urgency Priority</label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
                     {(["low", "medium", "high", "critical"] as Priority[]).map((p) => (
                       <label key={p} className="relative cursor-pointer">
@@ -1124,13 +1124,13 @@ export default function App() {
           {/* PAGE 4: QUALITY INSPECTION */}
           {currentPage === "inspection" && isAuthenticated && (
             <div className="p-6 max-w-[1000px] mx-auto space-y-6">
-              <div className={`border-b pb-4 ${divider}`}>
-                <h2 className="text-2xl font-bold tracking-tight">Quality Assurance Audit</h2>
-                <p className="text-xs opacity-60 mt-1">Log defect dimensions and classification metrics.</p>
+              <div className={`border-b pb-5 ${divider}`}>
+                <h2 className="text-3xl font-black tracking-tight">Quality Assurance Audit</h2>
+                <p className={`text-sm mt-1 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>Log defect dimensions and classification metrics.</p>
               </div>
 
               <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">
-                <div className={`p-5 rounded-2xl border space-y-5 ${card}`}>
+                <div className={`p-6 rounded-2xl border space-y-5 shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
                   {workOrders.filter(w => w.status === "pending").length === 0 ? (
                     <div className="py-12 text-center text-sm font-mono opacity-60">
                       No pending work orders require inspection.
@@ -1140,7 +1140,7 @@ export default function App() {
                     <>
                       {/* Work Order Selector */}
                       <div>
-                        <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Target Work Order</label>
+                        <label className={`block text-[12px] font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Target Work Order</label>
                         <select
                           value={selectedWorkOrder?.id || ""}
                           onChange={(e) => setSelectedWorkOrder(workOrders.find(wo => wo.id === e.target.value) || null)}
@@ -1155,7 +1155,7 @@ export default function App() {
 
                       {/* Pass/Fail Radio-style buttons */}
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono font-bold uppercase opacity-60">Status Assessment:</span>
+                        <span className={`text-sm font-mono font-bold uppercase ${dk ? "text-slate-300" : "text-slate-700"}`}>Status Assessment:</span>
                         <div className="flex gap-2">
                           <button
                             onClick={() => setInspectionResult("pass")}
@@ -1180,7 +1180,7 @@ export default function App() {
 
                       {/* Defect Type Radios */}
                       <div>
-                        <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Defect Root Cause Classification</label>
+                        <label className={`block text-[12px] font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Defect Root Cause Classification</label>
                         <div className="grid grid-cols-2 gap-2.5">
                           {(["cosmetic", "dimensional", "functional", "material"] as DefectType[]).map((type) => (
                             <label key={type} className="relative cursor-pointer">
@@ -1196,7 +1196,7 @@ export default function App() {
                                 ? "bg-violet-500/10 border-violet-500/50 text-violet-400"
                                 : dk ? "bg-slate-800/40 border-slate-800 opacity-60" : "bg-slate-100 border-slate-300 text-slate-600"
                                 }`}>
-                                <span className="text-xs capitalize font-medium">{type}</span>
+                                <span className="text-sm capitalize font-semibold">{type}</span>
                               </div>
                             </label>
                           ))}
@@ -1205,7 +1205,7 @@ export default function App() {
 
                       {/* Notes with limit check */}
                       <div>
-                        <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">
+                        <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>
                           Inspector Notes (Max 200 chars, no HTML tags)
                         </label>
                         <textarea
@@ -1239,17 +1239,17 @@ export default function App() {
                   )}
                 </div>
 
-                <div className={`p-5 rounded-2xl border ${card}`}>
-                  <h3 className="text-xs font-bold font-mono tracking-wider opacity-60 mb-3">HISTORICAL QA LOGS</h3>
+                <div className={`p-6 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                  <h3 className={`text-base font-bold tracking-wide mb-4 ${dk ? "text-slate-200" : "text-slate-800"}`}>Historical QA Logs</h3>
                   <div className="space-y-3">
                     {inspections.map((ins) => (
-                      <div key={ins.id} className={`p-3 rounded-xl border text-xs font-mono ${panelBg}`}>
-                        <div className="flex justify-between items-center font-bold mb-1">
-                          <span className="text-cyan-400">{ins.id}</span>
-                          <span className={ins.passed ? "text-emerald-400" : "text-red-400"}>{ins.passed ? "PASSED" : "FAILED"}</span>
+                      <div key={ins.id} className={`p-4 rounded-xl border ${dk ? "bg-slate-700/30 border-slate-600/40" : "bg-slate-50 border-slate-200"}`}>
+                        <div className="flex justify-between items-center font-bold mb-1.5">
+                          <span className="text-cyan-400 font-mono text-sm">{ins.id}</span>
+                          <span className={`text-sm ${ins.passed ? "text-emerald-400" : "text-red-400"}`}>{ins.passed ? "✓ PASSED" : "✕ FAILED"}</span>
                         </div>
-                        <p className="opacity-70 mt-1">{ins.notes}</p>
-                        <div className="mt-2 text-[10px] opacity-40">Inspector: {ins.inspectorId} • {ins.timestamp}</div>
+                        <p className={`text-sm leading-relaxed ${dk ? "text-slate-300" : "text-slate-600"}`}>{ins.notes}</p>
+                        <div className={`mt-2 text-xs font-mono ${dk ? "text-slate-500" : "text-slate-400"}`}>Inspector: {ins.inspectorId} • {ins.timestamp}</div>
                       </div>
                     ))}
                   </div>
@@ -1261,18 +1261,17 @@ export default function App() {
           {/* PAGE 5: SAFETY & LOCKOUT TAGOUT */}
           {currentPage === "maintenance" && isAuthenticated && (
             <div className="p-6 max-w-[1200px] mx-auto space-y-6">
-              <div className={`border-b pb-4 ${divider}`}>
-                <h2 className="text-2xl font-bold tracking-tight">Lockout / Tagout (LOTO) Command</h2>
-                <p className="text-xs opacity-60 mt-1">Hazard isolation procedures — OSHA 1910.147 requirements.</p>
+              <div className={`border-b pb-5 ${divider}`}>
+                <h2 className="text-3xl font-black tracking-tight">Lockout / Tagout (LOTO) Command</h2>
+                <p className={`text-sm mt-1 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>Hazard isolation procedures — OSHA 1910.147 requirements.</p>
               </div>
 
               <div className="grid lg:grid-cols-3 gap-6">
-                <div className={`lg:col-span-2 p-5 rounded-2xl border space-y-4 ${card}`}>
-                  <h3 className="text-sm font-bold flex items-center gap-2 text-red-400 font-mono tracking-wide uppercase">
-                    <Zap className="w-4 h-4 text-red-400 animate-pulse" /> Active Machine Lockouts
+                <div className={`lg:col-span-2 p-6 rounded-2xl border space-y-4 shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                  <h3 className="text-base font-bold flex items-center gap-2 text-red-400 tracking-wide">
+                    <Zap className="w-5 h-5 text-red-400 animate-pulse" /> Active Machine Lockouts
                   </h3>
-
-                  <div className="space-y-3 font-mono text-xs">
+                  <div className="space-y-3">
                     {workOrders.filter(w => w.status === "failed").length === 0 ? (
                       <div className={`p-8 text-center border border-dashed rounded-xl ${dk ? "border-slate-800 text-slate-500" : "border-slate-300 text-slate-400"}`}>
                         All machine safety gates operational. No recorded QA faults require LOTO clearing.
@@ -1281,11 +1280,11 @@ export default function App() {
                       workOrders.filter(w => w.status === "failed").map((wo) => (
                         <div key={wo.id} className="p-4 rounded-xl border bg-red-500/5 border-red-500/30 flex justify-between items-center flex-wrap gap-4">
                           <div>
-                            <div className="flex items-center gap-3 font-bold mb-1">
-                              <span className="text-red-400">{wo.partNumber} ({wo.station})</span>
-                              <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-500 text-[10px]">LOCKED BY FAULT</span>
+                            <div className="flex items-center gap-3 font-bold mb-1.5">
+                              <span className="text-red-400 text-sm">{wo.partNumber} ({wo.station})</span>
+                              <span className="px-2.5 py-1 rounded-lg bg-red-500/20 text-red-500 text-xs font-bold">LOCKED BY FAULT</span>
                             </div>
-                            <div className={`text-[10px] ${dk ? "opacity-60" : "text-slate-600"}`}>
+                            <div className={`text-sm ${dk ? "text-slate-400" : "text-slate-600"}`}>
                               Failed Job: {wo.id} • Batch: {wo.batch}
                             </div>
                           </div>
@@ -1295,7 +1294,7 @@ export default function App() {
                               setWorkOrders(prev => prev.map(w => w.id === wo.id ? { ...w, status: "resolved" } : w));
                               showNotification(`LOTO procedure cleared. Machine at ${wo.station} is unlocked.`, "success");
                             }}
-                            className="px-4 py-2 border border-emerald-500/50 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all rounded-lg font-bold text-[10px] tracking-widest uppercase"
+                            className="px-4 py-2.5 border border-emerald-500/50 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all rounded-xl font-bold text-sm tracking-wide uppercase"
                           >
                             Resolve & Unlock
                           </button>
@@ -1305,19 +1304,19 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className={`p-5 rounded-2xl border ${card}`}>
-                  <h3 className="text-sm font-bold font-mono tracking-wider opacity-70 mb-3">DIGITAL TWIN TELEMETRY</h3>
-                  <div className="space-y-4 text-xs">
+                <div className={`p-6 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                  <h3 className={`text-base font-bold tracking-wide mb-4 ${dk ? "text-slate-200" : "text-slate-800"}`}>Digital Twin Telemetry</h3>
+                  <div className="space-y-4">
                     <div className="p-4 bg-violet-500/10 border border-violet-500/30 rounded-xl">
-                      <span className="font-bold text-violet-400 font-mono block mb-1 uppercase text-[10px]">Real-time MQTT Stream</span>
-                      <p className="opacity-70 leading-relaxed">
+                      <span className={`font-bold text-violet-400 block mb-1.5 text-xs font-mono uppercase`}>Real-time MQTT Stream</span>
+                      <p className={`text-sm leading-relaxed ${dk ? "text-slate-300" : "text-slate-600"}`}>
                         Digital Twin syncs to the physical press over an MQTT broker. If a hardware gate is opened without LOTO tags, the system halts production power within 15ms.
                       </p>
                     </div>
 
                     <div className="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl">
-                      <span className="font-bold text-cyan-400 font-mono block mb-1 uppercase text-[10px]">Augmented Reality Sync</span>
-                      <p className="opacity-70 leading-relaxed">
+                      <span className={`font-bold text-cyan-400 block mb-1.5 text-xs font-mono uppercase`}>Augmented Reality Sync</span>
+                      <p className={`text-sm leading-relaxed ${dk ? "text-slate-300" : "text-slate-600"}`}>
                         Workers utilizing spatial computing tablets receive real-time color overlays of hydraulic pressure points when standing within 3 meters of Line A3.
                       </p>
                     </div>
@@ -1331,43 +1330,43 @@ export default function App() {
           {/* PAGE 6: SHIFT ANALYTICS REPORT */}
           {currentPage === "report" && isAuthenticated && (
             <div className="p-6 max-w-[1100px] mx-auto space-y-6">
-              <div className={`border-b pb-4 ${divider}`}>
-                <h2 className="text-2xl font-bold tracking-tight">Shift Analytics Report</h2>
-                <p className={`text-xs mt-1 ${dk ? "opacity-60" : "text-slate-500"}`}>Production summary for {selectedShift.toUpperCase()} shift — Operator: {employeeId}</p>
+              <div className={`border-b pb-5 ${divider}`}>
+                <h2 className="text-3xl font-black tracking-tight">Shift Analytics Report</h2>
+                <p className={`text-sm mt-1 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>Production summary for {selectedShift.toUpperCase()} shift — Operator: {employeeId}</p>
               </div>
 
               {/* Summary KPIs - NOW DYNAMICALLY DRIVEN */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                  { label: "UNITS LOADED", value: workOrders.reduce((acc, w) => acc + w.quantity, 0).toLocaleString(), suffix: "pcs", trend: "Target: 50k" },
-                  { label: "QUALITY YIELD", value: inspections.length ? ((inspections.filter(i => i.passed).length / inspections.length) * 100).toFixed(1) : "100.0", suffix: "%", trend: "Active Shift" },
-                  { label: "QA REJECTS", value: inspections.filter(i => !i.passed).length.toString(), suffix: "parts", trend: "Historical Log" },
-                  { label: "AVG CYCLE TIME", value: (40 + Math.random() * 10).toFixed(1), suffix: "sec", trend: "Optimal" },
+                  { label: "Units Loaded", value: workOrders.reduce((acc, w) => acc + w.quantity, 0).toLocaleString(), suffix: "pcs", trend: "Target: 50k" },
+                  { label: "Quality Yield", value: inspections.length ? ((inspections.filter(i => i.passed).length / inspections.length) * 100).toFixed(1) : "100.0", suffix: "%", trend: "Active Shift" },
+                  { label: "QA Rejects", value: inspections.filter(i => !i.passed).length.toString(), suffix: "parts", trend: "Historical Log" },
+                  { label: "Avg Cycle Time", value: (40 + Math.random() * 10).toFixed(1), suffix: "sec", trend: "Optimal" },
                 ].map((kpi, index) => (
-                  <div key={index} className={`p-5 rounded-2xl border ${card}`}>
-                    <span className={`text-[10px] font-mono uppercase tracking-wider block ${dk ? "opacity-50" : "text-slate-500"}`}>{kpi.label}</span>
-                    <div className="text-3xl font-extrabold font-mono mt-2 text-cyan-400">{kpi.value}<span className="text-sm opacity-50 ml-1">{kpi.suffix}</span></div>
-                    <div className="text-[10px] mt-2 opacity-60 font-mono">{kpi.trend}</div>
+                  <div key={index} className={`p-5 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                    <p className={`text-[12px] font-mono font-bold uppercase tracking-wider mb-2 ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.label}</p>
+                    <div className="text-3xl font-black font-mono text-cyan-400">{kpi.value}<span className={`text-base font-semibold ml-1.5 ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.suffix}</span></div>
+                    <div className={`text-sm mt-2 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.trend}</div>
                   </div>
                 ))}
               </div>
 
               <div className="grid lg:grid-cols-2 gap-6">
                 {/* Inspection Log Table */}
-                <div className={`p-5 rounded-2xl border ${card}`}>
-                  <h3 className={`text-sm font-bold tracking-wider uppercase mb-4 ${dk ? "opacity-70" : "text-slate-500"}`}>QA Inspection Log</h3>
+                <div className={`p-6 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                  <h3 className={`text-base font-bold tracking-wide mb-4 ${dk ? "text-slate-200" : "text-slate-800"}`}>QA Inspection Log</h3>
                   {inspections.length === 0 ? (
                     <p className={`text-sm text-center py-6 ${dk ? "opacity-50" : "text-slate-400"}`}>No inspections submitted yet.</p>
                   ) : (
                     <div className="space-y-2">
                       {inspections.map(ins => (
-                        <div key={ins.id} className={`flex items-center justify-between p-3 rounded-xl border text-xs font-mono ${panelBg}`}>
+                        <div key={ins.id} className={`flex items-center justify-between p-4 rounded-xl border ${dk ? "bg-slate-700/30 border-slate-600/40" : "bg-slate-50 border-slate-200"}`}>
                           <div>
-                            <span className="text-cyan-400 font-bold">{ins.id}</span>
-                            <span className={`ml-2 ${dk ? "opacity-60" : "text-slate-500"}`}>→ {ins.workOrderId}</span>
-                            <p className={`mt-0.5 ${dk ? "opacity-50" : "text-slate-400"}`}>{ins.notes.slice(0, 40)}{ins.notes.length > 40 ? "…" : ""}</p>
+                            <span className="text-cyan-400 font-bold font-mono">{ins.id}</span>
+                            <span className={`ml-2 text-sm ${dk ? "text-slate-400" : "text-slate-500"}`}>→ {ins.workOrderId}</span>
+                            <p className={`mt-0.5 text-sm ${dk ? "text-slate-300" : "text-slate-600"}`}>{ins.notes.slice(0, 40)}{ins.notes.length > 40 ? "…" : ""}</p>
                           </div>
-                          <span className={`px-2 py-0.5 rounded font-bold text-[10px] border ${ins.passed ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" : "text-red-400 bg-red-500/10 border-red-500/30"}`}>
+                          <span className={`px-2.5 py-1 rounded-lg font-bold text-xs border ${ins.passed ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" : "text-red-400 bg-red-500/10 border-red-500/30"}`}>
                             {ins.passed ? "PASS" : "FAIL"}
                           </span>
                         </div>
@@ -1377,8 +1376,8 @@ export default function App() {
                 </div>
 
                 {/* Shift Telemetry Snapshot */}
-                <div className={`p-5 rounded-2xl border ${card}`}>
-                  <h3 className={`text-sm font-bold tracking-wider uppercase mb-4 ${dk ? "opacity-70" : "text-slate-500"}`}>Live Machine Telemetry</h3>
+                <div className={`p-6 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                  <h3 className={`text-base font-bold tracking-wide mb-4 ${dk ? "text-slate-200" : "text-slate-800"}`}>Live Machine Telemetry</h3>
                   <div className="space-y-4">
                     {[
                       { label: "OEE", value: `${telemetry.oee}%`, bar: telemetry.oee, color: "bg-cyan-500" },
@@ -1387,9 +1386,9 @@ export default function App() {
                       { label: "VIBRATION", value: `${telemetry.vibration} mm/s`, bar: (telemetry.vibration / 100) * 100, color: telemetry.vibration > 65 ? "bg-red-500" : "bg-emerald-500" },
                     ].map((m, i) => (
                       <div key={i}>
-                        <div className="flex justify-between text-xs font-mono mb-1">
-                          <span className={dk ? "opacity-60" : "text-slate-500"}>{m.label}</span>
-                          <span className="font-bold">{m.value}</span>
+                        <div className="flex justify-between mb-1.5">
+                          <span className={`text-sm font-mono font-bold uppercase ${dk ? "text-slate-400" : "text-slate-500"}`}>{m.label}</span>
+                          <span className={`text-sm font-bold font-mono ${dk ? "text-slate-100" : "text-slate-800"}`}>{m.value}</span>
                         </div>
                         <div className={`h-2 rounded-full overflow-hidden ${dk ? "bg-slate-800" : "bg-slate-200"}`}>
                           <div className={`h-full ${m.color} transition-all duration-1000`} style={{ width: `${Math.min(m.bar, 100)}%` }} />
@@ -1405,10 +1404,10 @@ export default function App() {
           {/* PAGE 7: HELP & FAQ */}
           {currentPage === "faq" && (
             <div className="p-6 max-w-[900px] mx-auto space-y-6">
-              <div className={`border-b pb-4 ${divider} flex justify-between items-center`}>
+              <div className={`border-b pb-5 ${divider} flex justify-between items-center`}>
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight">Operator FAQ & Flow Guide</h2>
-                  <p className={`text-xs mt-1 ${dk ? "opacity-60" : "text-slate-500"}`}>System instructions and troubleshooting for FabricaTech MES.</p>
+                  <h2 className="text-3xl font-black tracking-tight">Operator FAQ & Flow Guide</h2>
+                  <p className={`text-sm mt-1 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>System instructions and troubleshooting for FabricaTech MES.</p>
                 </div>
                 {!isAuthenticated && (
                   <button
@@ -1427,11 +1426,11 @@ export default function App() {
                   { q: "How do I clear a Safety Lockout (LOTO)?", a: "When an audit fails, navigate to the SAFETY CONTROL page. The faulty machine will be listed under Active Lockouts. After physical verification is complete, click 'Resolve & Unlock' to reset the job status and bring the machine back online." },
                   { q: "How do I switch interface themes?", a: "Click the Sun/Moon icon in the top right corner of the application to seamlessly toggle between the dark high-contrast mode and the light industrial mode. All charts will automatically adjust to the setting." },
                 ].map((item, i) => (
-                  <div key={i} className={`p-5 rounded-2xl border ${card}`}>
-                    <h3 className="text-sm font-bold tracking-wide flex items-start gap-2 mb-2 text-cyan-500">
-                      <HelpCircle className="w-5 h-5 flex-shrink-0" /> {item.q}
+                  <div key={i} className={`p-6 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                    <h3 className="text-base font-bold tracking-wide flex items-start gap-3 mb-3 text-cyan-500">
+                      <HelpCircle className="w-5 h-5 flex-shrink-0 mt-0.5" /> {item.q}
                     </h3>
-                    <p className={`text-sm leading-relaxed pl-7 ${dk ? "opacity-70" : "text-slate-600"}`}>
+                    <p className={`text-sm leading-relaxed pl-8 ${dk ? "text-slate-300" : "text-slate-600"}`}>
                       {item.a}
                     </p>
                   </div>
