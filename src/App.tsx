@@ -48,10 +48,10 @@ export default function App() {
   // Global / App State
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("mes-theme");
-      return (saved as "dark" | "light") || "dark";
+      const saved = localStorage.getItem("mes-theme-v2");
+      return (saved as "dark" | "light") || "light";
     }
-    return "dark";
+    return "light";
   });
 
   const [currentPage, setCurrentPage] = useState<Page>("safety");
@@ -106,7 +106,7 @@ export default function App() {
   const [notification, setNotification] = useState<{ message: string; type: "error" | "success" | "warning" } | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("mes-theme", theme);
+    localStorage.setItem("mes-theme-v2", theme);
     const root = window.document.documentElement;
     if (theme === "light") {
       root.classList.add("light");
@@ -508,10 +508,10 @@ export default function App() {
           {/* PAGE 1: SAFETY CHECKPOINT (LOGIN) */}
           {currentPage === "safety" && (
             <div className="min-h-full flex items-center justify-center p-6">
-              <div className={`w-full max-w-[1000px] grid lg:grid-cols-[1.1fr_0.9fr] gap-8 border rounded-3xl overflow-hidden shadow-2xl backdrop-blur-sm ${dk ? "bg-slate-900/20 border-slate-800/50" : "bg-white border-slate-200"}`}>
+              <div className={`w-full max-w-[1000px] grid lg:grid-cols-[1.1fr_0.9fr] rounded-3xl overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.3)] backdrop-blur-sm ${dk ? "bg-slate-900 border border-slate-800/50" : "bg-white border border-slate-200"}`}>
 
                 {/* Left: Safety Briefing Panel */}
-                <div className={`p-8 flex flex-col justify-between ${dk ? "bg-slate-900/60" : "bg-slate-50"}`}>
+                <div className={`p-10 flex flex-col justify-between text-slate-100 ${dk ? "bg-slate-900/80" : "bg-[#0f172a]"}`}>
                   <div>
                     <div className="flex items-center gap-3 mb-6">
                       <HardHat className="w-8 h-8 text-amber-500" />
@@ -541,9 +541,9 @@ export default function App() {
                           "High Visibility Jacket", "Hearing Protection",
                           "Safety Eyewear", "Gloves Dispatched"
                         ].map((item, index) => (
-                          <div key={index} className={`flex items-center gap-2 p-2.5 rounded-xl border ${dk ? "border-slate-800/50 bg-slate-800/20" : "border-slate-200 bg-white"}`}>
+                          <div key={index} className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-700/50 bg-slate-800/40">
                             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                            <span className="text-xs opacity-90 font-medium">{item}</span>
+                            <span className="text-xs opacity-90 font-medium text-slate-100">{item}</span>
                           </div>
                         ))}
                       </div>
@@ -556,7 +556,7 @@ export default function App() {
                 </div>
 
                 {/* Right: Authentication Form */}
-                <div className="p-8 flex flex-col justify-center">
+                <div className={`p-10 flex flex-col justify-center ${dk ? "bg-slate-900" : "bg-[#f0f2f5] text-slate-800"}`}>
                   <div className="space-y-4">
                     <div>
                       <h2 className="text-xl font-bold">Operator Shift Check-In</h2>
@@ -630,9 +630,9 @@ export default function App() {
                     <button
                       onClick={handleLogin}
                       disabled={!passwordCriteria.length || !passwordCriteria.hasUpper || !passwordCriteria.hasLower || !passwordCriteria.hasSpecial || !passwordCriteria.noSpaces}
-                      className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm tracking-wider shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full mt-4 py-3.5 rounded-xl bg-[#e8701a] hover:bg-[#d06015] text-white font-bold text-xs tracking-wider shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      BEGIN SHIFT OPERATIONS
+                      AUTHENTICATE & ACCESS SYSTEM
                     </button>
 
                     <button
