@@ -904,12 +904,12 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className={`px-5 py-3 border rounded-2xl text-center shadow-sm ${dk ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"}`}>
-                    <span className={`block text-[11px] font-mono font-bold uppercase mb-0.5 ${dk ? "text-slate-400" : "text-slate-500"}`}>LINE SPEED</span>
-                    <span className="font-mono text-lg font-black text-cyan-400 tabular-nums">{telemetry.speed} <span className="text-xs font-normal">ppm</span></span>
+                    <span className={`block text-sm font-mono font-bold uppercase tracking-wide mb-1 ${dk ? "text-slate-300" : "text-slate-700"}`}>LINE SPEED</span>
+                    <span className="font-mono text-xl font-black text-cyan-400 tabular-nums">{telemetry.speed} <span className="text-sm font-bold opacity-60">ppm</span></span>
                   </div>
                   <div className={`px-5 py-3 border rounded-2xl text-center shadow-sm ${dk ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"}`}>
-                    <span className={`block text-[11px] font-mono font-bold uppercase mb-0.5 ${dk ? "text-slate-400" : "text-slate-500"}`}>VIBRATION</span>
-                    <span className={`font-mono text-lg font-black tabular-nums ${telemetry.vibration > 65 ? "text-amber-400" : "text-emerald-400"}`}>{telemetry.vibration} <span className="text-xs font-normal">mm/s</span></span>
+                    <span className={`block text-sm font-mono font-bold uppercase tracking-wide mb-1 ${dk ? "text-slate-300" : "text-slate-700"}`}>VIBRATION</span>
+                    <span className={`font-mono text-xl font-black tabular-nums ${telemetry.vibration > 65 ? "text-amber-400" : "text-emerald-400"}`}>{telemetry.vibration} <span className="text-sm font-bold opacity-60">mm/s</span></span>
                   </div>
                 </div>
               </div>
@@ -923,8 +923,8 @@ export default function App() {
                   { title: "Quality Yield", value: "99.3%", status: "Perfect", sub: "First pass yield", color: "text-amber-400", bar: 99.3 },
                 ].map((kpi, i) => (
                   <div key={i} className={`p-5 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
-                    <p className={`text-[11px] font-mono font-bold uppercase tracking-wider mb-2 ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.title}</p>
-                    <div className={`text-3xl font-black tracking-tight font-mono ${kpi.color}`}>{kpi.value}</div>
+                    <p className={`text-sm font-mono font-bold uppercase tracking-wide mb-2 ${dk ? "text-slate-300" : "text-slate-700"}`}>{kpi.title}</p>
+                    <div className={`text-4xl font-black tracking-tight font-mono ${kpi.color}`}>{kpi.value}</div>
                     <div className={`mt-3 h-1.5 rounded-full overflow-hidden ${dk ? "bg-slate-700" : "bg-slate-100"}`}>
                       <div className={`h-full rounded-full transition-all duration-1000 ${kpi.color.replace("text-", "bg-")}`} style={{ width: `${kpi.bar}%` }} />
                     </div>
@@ -950,7 +950,7 @@ export default function App() {
                       <thead>
                         <tr className={`border-b ${divider}`}>
                           {["JOB ID", "PART NO", "BATCH", "PRIORITY", "STATUS"].map(h => (
-                            <th key={h} className={`py-3 pr-4 text-[11px] font-mono font-bold uppercase tracking-wider ${dk ? "text-slate-400" : "text-slate-500"}`}>{h}</th>
+                            <th key={h} className={`py-4 pr-4 text-sm font-mono font-bold uppercase tracking-wide ${dk ? "text-slate-300" : "text-slate-700"}`}>{h}</th>
                           ))}
                         </tr>
                       </thead>
@@ -1046,7 +1046,7 @@ export default function App() {
 
                 {/* Part Number input with custom validation */}
                 <div>
-                  <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>
+                  <label className={`block text-sm font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-300" : "text-slate-700"}`}>
                     Part Number (Format: AB-1234 or ABC-1234X)
                   </label>
                   <input
@@ -1067,7 +1067,7 @@ export default function App() {
 
                 {/* Batch Code */}
                 <div>
-                  <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>
+                  <label className={`block text-sm font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-300" : "text-slate-700"}`}>
                     Batch Control Code (Alphanumeric & Hyphens only)
                   </label>
                   <input
@@ -1088,7 +1088,7 @@ export default function App() {
 
                 {/* Priority Radios */}
                 <div>
-                  <label className={`block text-[12px] font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Job Urgency Priority</label>
+                  <label className={`block text-sm font-mono font-bold mb-3 uppercase tracking-wide ${dk ? "text-slate-300" : "text-slate-700"}`}>Job Urgency Priority</label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
                     {(["low", "medium", "high", "critical"] as Priority[]).map((p) => (
                       <label key={p} className="relative cursor-pointer">
@@ -1140,7 +1140,7 @@ export default function App() {
                     <>
                       {/* Work Order Selector */}
                       <div>
-                        <label className={`block text-[12px] font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Target Work Order</label>
+                        <label className={`block text-sm font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-300" : "text-slate-700"}`}>Target Work Order</label>
                         <select
                           value={selectedWorkOrder?.id || ""}
                           onChange={(e) => setSelectedWorkOrder(workOrders.find(wo => wo.id === e.target.value) || null)}
@@ -1155,7 +1155,7 @@ export default function App() {
 
                       {/* Pass/Fail Radio-style buttons */}
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm font-mono font-bold uppercase ${dk ? "text-slate-300" : "text-slate-700"}`}>Status Assessment:</span>
+                        <span className={`text-sm font-mono font-bold tracking-wide uppercase ${dk ? "text-slate-300" : "text-slate-700"}`}>Status Assessment:</span>
                         <div className="flex gap-2">
                           <button
                             onClick={() => setInspectionResult("pass")}
@@ -1180,7 +1180,7 @@ export default function App() {
 
                       {/* Defect Type Radios */}
                       <div>
-                        <label className={`block text-[12px] font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Defect Root Cause Classification</label>
+                        <label className={`block text-sm font-mono font-bold mb-3 uppercase tracking-wide ${dk ? "text-slate-300" : "text-slate-700"}`}>Defect Root Cause Classification</label>
                         <div className="grid grid-cols-2 gap-2.5">
                           {(["cosmetic", "dimensional", "functional", "material"] as DefectType[]).map((type) => (
                             <label key={type} className="relative cursor-pointer">
@@ -1205,7 +1205,7 @@ export default function App() {
 
                       {/* Notes with limit check */}
                       <div>
-                        <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>
+                        <label className={`block text-sm font-mono font-bold mb-2 uppercase tracking-wide ${dk ? "text-slate-300" : "text-slate-700"}`}>
                           Inspector Notes (Max 200 chars, no HTML tags)
                         </label>
                         <textarea
@@ -1344,8 +1344,8 @@ export default function App() {
                   { label: "Avg Cycle Time", value: (40 + Math.random() * 10).toFixed(1), suffix: "sec", trend: "Optimal" },
                 ].map((kpi, index) => (
                   <div key={index} className={`p-5 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
-                    <p className={`text-[12px] font-mono font-bold uppercase tracking-wider mb-2 ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.label}</p>
-                    <div className="text-3xl font-black font-mono text-cyan-400">{kpi.value}<span className={`text-base font-semibold ml-1.5 ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.suffix}</span></div>
+                    <p className={`text-sm font-mono font-bold uppercase tracking-wide mb-2 ${dk ? "text-slate-300" : "text-slate-700"}`}>{kpi.label}</p>
+                    <div className="text-4xl font-black font-mono text-cyan-400">{kpi.value}<span className={`text-base font-semibold ml-1.5 ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.suffix}</span></div>
                     <div className={`text-sm mt-2 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.trend}</div>
                   </div>
                 ))}
