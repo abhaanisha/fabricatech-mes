@@ -716,7 +716,7 @@ export default function App() {
           {/* PAGE: REGISTER — Full standalone page */}
           {currentPage === "register" && (
             <div className="min-h-screen flex items-center justify-center p-6">
-              <div className={`w-full max-w-2xl rounded-3xl border shadow-2xl overflow-hidden ${card}`}>
+              <div className={`w-full max-w-2xl rounded-3xl border shadow-2xl overflow-hidden ${dk ? "bg-slate-900 border-slate-700/60" : "bg-white border-slate-200"}`}>
                 {/* Header */}
                 <div className="p-8 border-b bg-gradient-to-br from-cyan-500/10 to-blue-600/5" style={{ borderColor: dk ? "rgba(71,85,105,0.3)" : "rgba(226,232,240,1)" }}>
                   <div className="flex items-center justify-between">
@@ -735,7 +735,7 @@ export default function App() {
                 <div className="p-8 grid sm:grid-cols-2 gap-5">
                   {/* Full Name */}
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Full Name</label>
+                    <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Full Name</label>
                     <input type="text" value={regName} onChange={(e) => { const v = e.target.value; setRegName(v); validateRegField("regName", v); }}
                       placeholder="e.g. Abha Singh Sardar"
                       className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all ${regErrors.regName ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
@@ -745,7 +745,7 @@ export default function App() {
 
                   {/* Email */}
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Organizational Email (@fabtech.com)</label>
+                    <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Organizational Email (@fabtech.com)</label>
                     <input type="email" value={regEmail} onChange={(e) => { const v = e.target.value; setRegEmail(v); validateRegField("regEmail", v); }}
                       placeholder="yourname@fabtech.com"
                       className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all ${regErrors.regEmail ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
@@ -755,7 +755,7 @@ export default function App() {
 
                   {/* Contact */}
                   <div>
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Contact Number</label>
+                    <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Contact Number</label>
                     <input type="tel" value={regContact} maxLength={10} onChange={(e) => { const v = e.target.value.replace(/\D/g, ""); setRegContact(v); validateRegField("regContact", v); }}
                       placeholder="9876543210"
                       className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all font-mono ${regErrors.regContact ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
@@ -765,7 +765,7 @@ export default function App() {
 
                   {/* Department */}
                   <div>
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Department</label>
+                    <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Department</label>
                     <select value={regDept} onChange={(e) => { 
                         const v = e.target.value; 
                         setRegDept(v); 
@@ -786,7 +786,7 @@ export default function App() {
 
                   {/* Role Dropdown */}
                   <div>
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Role</label>
+                    <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Role</label>
                     <select value={regRole} onChange={(e) => { const v = e.target.value; setRegRole(v); validateRegField("regRole", v); }}
                       disabled={!regDept}
                       className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed ${regErrors.regRole ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
@@ -824,7 +824,7 @@ export default function App() {
 
                   {/* Employee ID */}
                   <div>
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Employee ID — Your Login Username (6 chars)</label>
+                    <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Employee ID — Your Login Username (6 chars)</label>
                     <input type="text" value={regId} maxLength={6} onChange={(e) => { const v = e.target.value.toUpperCase(); setRegId(v); validateRegField("regId", v); }}
                       placeholder="e.g. F99001"
                       className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all font-mono ${regErrors.regId ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
@@ -834,7 +834,7 @@ export default function App() {
 
                   {/* Password */}
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Create Password</label>
+                    <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Create Password</label>
                     <input type="password" value={regPassword} onChange={(e) => { const v = e.target.value; setRegPassword(v); validateRegField("regPassword", v); if (regConfirm) validateRegField("regConfirm", regConfirm, v); }}
                       placeholder="••••••••"
                       className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all font-mono ${regErrors.regPassword ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
@@ -858,7 +858,7 @@ export default function App() {
 
                   {/* Confirm Password */}
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Confirm Password</label>
+                    <label className={`block text-[12px] font-mono font-bold mb-1.5 uppercase tracking-wide ${dk ? "text-slate-400" : "text-slate-600"}`}>Confirm Password</label>
                     <div className="relative">
                       <input type="password" value={regConfirm} onChange={(e) => { const v = e.target.value; setRegConfirm(v); validateRegField("regConfirm", v, regPassword); }}
                         placeholder="••••••••"
@@ -894,81 +894,83 @@ export default function App() {
           {/* PAGE 2: PRODUCTION DASHBOARD */}
 
           {currentPage === "dashboard" && isAuthenticated && (
-            <div className="p-6 max-w-[1400px] mx-auto space-y-6">
+            <div className="p-6 max-w-[1400px] mx-auto space-y-8">
 
-              <div className={`flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4 ${divider}`}>
+              {/* Dashboard Header */}
+              <div className={`flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-5 border-b ${divider}`}>
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight">OEE Live Telemetry</h2>
-                  <p className="text-xs opacity-60 mt-1">Industrial Line A3 Digital Twin Streaming — Continuous Updates</p>
+                  <h2 className="text-3xl font-black tracking-tight">Production Dashboard</h2>
+                  <p className={`text-sm mt-1 font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>Line A3 Digital Twin — Real-time Telemetry Streaming</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className={`px-4 py-2 border rounded-xl text-center ${panelBg}`}>
-                    <span className="block text-[10px] opacity-60 font-mono">SPEED</span>
-                    <span className="font-mono text-sm font-bold text-cyan-400 tabular-nums">{telemetry.speed} ppm</span>
+                  <div className={`px-5 py-3 border rounded-2xl text-center shadow-sm ${dk ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"}`}>
+                    <span className={`block text-[11px] font-mono font-bold uppercase mb-0.5 ${dk ? "text-slate-400" : "text-slate-500"}`}>LINE SPEED</span>
+                    <span className="font-mono text-lg font-black text-cyan-400 tabular-nums">{telemetry.speed} <span className="text-xs font-normal">ppm</span></span>
                   </div>
-                  <div className={`px-4 py-2 border rounded-xl text-center ${panelBg}`}>
-                    <span className="block text-[10px] opacity-60 font-mono">VIBRATION</span>
-                    <span className={`font-mono text-sm font-bold tabular-nums ${telemetry.vibration > 65 ? "text-amber-400" : "text-emerald-400"}`}>{telemetry.vibration} mm/s</span>
+                  <div className={`px-5 py-3 border rounded-2xl text-center shadow-sm ${dk ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"}`}>
+                    <span className={`block text-[11px] font-mono font-bold uppercase mb-0.5 ${dk ? "text-slate-400" : "text-slate-500"}`}>VIBRATION</span>
+                    <span className={`font-mono text-lg font-black tabular-nums ${telemetry.vibration > 65 ? "text-amber-400" : "text-emerald-400"}`}>{telemetry.vibration} <span className="text-xs font-normal">mm/s</span></span>
                   </div>
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* KPI Cards */}
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {[
-                  { title: "OVERALL EFFICIENCY (OEE)", value: `${telemetry.oee}%`, status: "Operational", sub: "92% Target" },
-                  { title: "AVAILABILITY", value: "98.1%", status: "Good", sub: "Lockout clear" },
-                  { title: "PERFORMANCE", value: "95.4%", status: "Good", sub: "1250 units/min" },
-                  { title: "QUALITY YIELD", value: "99.3%", status: "Perfect", sub: "First pass yield" },
+                  { title: "Overall Efficiency (OEE)", value: `${telemetry.oee}%`, status: "Operational", sub: "92% Target", color: "text-cyan-400", bar: telemetry.oee },
+                  { title: "Availability", value: "98.1%", status: "Good", sub: "Lockout clear", color: "text-emerald-400", bar: 98.1 },
+                  { title: "Performance", value: "95.4%", status: "Good", sub: "1250 units/min", color: "text-violet-400", bar: 95.4 },
+                  { title: "Quality Yield", value: "99.3%", status: "Perfect", sub: "First pass yield", color: "text-amber-400", bar: 99.3 },
                 ].map((kpi, i) => (
-                  <div key={i} className={`p-5 rounded-2xl border ${card}`}>
-                    <span className="text-[10px] font-mono opacity-50 block uppercase tracking-wider">{kpi.title}</span>
-                    <div className="text-2xl font-extrabold tracking-tight mt-1.5 text-cyan-400 font-mono">{kpi.value}</div>
-                    <div className={`flex justify-between items-center mt-3 pt-3 border-t text-[11px] ${divider}`}>
-                      <span className="opacity-60">{kpi.sub}</span>
-                      <span className="text-emerald-400 font-bold">{kpi.status}</span>
+                  <div key={i} className={`p-5 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                    <p className={`text-[11px] font-mono font-bold uppercase tracking-wider mb-2 ${dk ? "text-slate-400" : "text-slate-500"}`}>{kpi.title}</p>
+                    <div className={`text-3xl font-black tracking-tight font-mono ${kpi.color}`}>{kpi.value}</div>
+                    <div className={`mt-3 h-1.5 rounded-full overflow-hidden ${dk ? "bg-slate-700" : "bg-slate-100"}`}>
+                      <div className={`h-full rounded-full transition-all duration-1000 ${kpi.color.replace("text-", "bg-")}`} style={{ width: `${kpi.bar}%` }} />
+                    </div>
+                    <div className={`flex justify-between items-center mt-2.5 text-xs font-medium ${dk ? "text-slate-400" : "text-slate-500"}`}>
+                      <span>{kpi.sub}</span>
+                      <span className="text-emerald-500 font-bold">{kpi.status}</span>
                     </div>
                   </div>
                 ))}
               </div>
 
               <div className="grid lg:grid-cols-3 gap-6">
-
                 {/* Active Work Orders */}
-                <div className={`lg:col-span-2 p-5 rounded-2xl border ${card}`}>
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className={`text-sm font-bold tracking-wider uppercase ${dk ? "opacity-70" : "text-slate-500"}`}>Shift Jobs Queue</h3>
-                    <button onClick={() => setCurrentPage("workorder")} className="flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
-                      <Plus className="w-3.5 h-3.5" /> NEW WO
+                <div className={`lg:col-span-2 p-6 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                  <div className="flex justify-between items-center mb-5">
+                    <h3 className={`text-base font-bold tracking-wide ${dk ? "text-slate-200" : "text-slate-800"}`}>Shift Jobs Queue</h3>
+                    <button onClick={() => setCurrentPage("workorder")} className="flex items-center gap-1.5 text-xs font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/30 px-3 py-1.5 rounded-lg hover:bg-indigo-500/20 transition-colors">
+                      <Plus className="w-3.5 h-3.5" /> NEW WORK ORDER
                     </button>
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left font-mono text-xs">
+                    <table className="w-full text-left text-sm">
                       <thead>
-                        <tr className={`border-b ${divider} opacity-60`}>
-                          <th className="py-2.5">JOB ID</th>
-                          <th>PART NO</th>
-                          <th>BATCH</th>
-                          <th>PRIORITY</th>
-                          <th>STATUS</th>
+                        <tr className={`border-b ${divider}`}>
+                          {["JOB ID", "PART NO", "BATCH", "PRIORITY", "STATUS"].map(h => (
+                            <th key={h} className={`py-3 pr-4 text-[11px] font-mono font-bold uppercase tracking-wider ${dk ? "text-slate-400" : "text-slate-500"}`}>{h}</th>
+                          ))}
                         </tr>
                       </thead>
                       <tbody className={`divide-y ${divider}`}>
                         {workOrders.map((wo) => (
-                          <tr key={wo.id} className={dk ? "hover:bg-slate-800/20" : "hover:bg-slate-50"}>
-                            <td className="py-3 font-bold text-cyan-400">{wo.id}</td>
-                            <td>{wo.partNumber}</td>
-                            <td>{wo.batch}</td>
-                            <td>
-                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${priorityColors[wo.priority]}`}>
+                          <tr key={wo.id} className={`transition-colors ${dk ? "hover:bg-slate-700/30" : "hover:bg-slate-50"}`}>
+                            <td className="py-3.5 pr-4 font-bold text-cyan-400 font-mono text-sm">{wo.id}</td>
+                            <td className={`pr-4 font-mono font-medium text-sm ${dk ? "text-slate-200" : "text-slate-700"}`}>{wo.partNumber}</td>
+                            <td className={`pr-4 font-mono text-sm ${dk ? "text-slate-300" : "text-slate-600"}`}>{wo.batch}</td>
+                            <td className="pr-4">
+                              <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${priorityColors[wo.priority]}`}>
                                 {wo.priority.toUpperCase()}
                               </span>
                             </td>
                             <td>
-                              <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${wo.status === "pending" ? "text-amber-400 border-amber-500/30" :
+                              <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${
+                                wo.status === "pending" ? "text-amber-400 border-amber-500/30 bg-amber-500/10" :
                                 wo.status === "inspected" ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" :
-                                  wo.status === "resolved" ? "text-blue-400 border-blue-500/30 bg-blue-500/10" :
-                                    "text-red-400 border-red-500/30 bg-red-500/10"
-                                }`}>
+                                wo.status === "resolved" ? "text-blue-400 border-blue-500/30 bg-blue-500/10" :
+                                "text-red-400 border-red-500/30 bg-red-500/10"}`}>
                                 {wo.status.toUpperCase()}
                               </span>
                             </td>
@@ -979,9 +981,9 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Machine Status alerts */}
-                <div className={`p-5 rounded-2xl border ${card}`}>
-                  <h3 className={`text-sm font-bold tracking-wider uppercase mb-3 ${dk ? "opacity-70" : "text-slate-500"}`}>Predictive Alerts</h3>
+                {/* Machine Status / Predictive Alerts */}
+                <div className={`p-6 rounded-2xl border shadow-sm ${dk ? "bg-slate-800/60 border-slate-700/60" : "bg-white border-slate-200"}`}>
+                  <h3 className={`text-base font-bold tracking-wide mb-4 ${dk ? "text-slate-200" : "text-slate-800"}`}>Predictive Alerts</h3>
                   <div className="space-y-3">
                     {workOrders.some(w => w.status === "failed") && (
                       <div className="p-3.5 bg-red-500/5 border border-red-500/20 rounded-xl">
