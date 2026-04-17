@@ -553,10 +553,10 @@ export default function App() {
           {/* PAGE 1: SAFETY CHECKPOINT (LOGIN) */}
           {currentPage === "safety" && (
             <div className="min-h-full flex items-center justify-center p-6">
-              <div className={`w-full max-w-[1000px] grid lg:grid-cols-[1.1fr_0.9fr] rounded-3xl overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.3)] backdrop-blur-sm ${dk ? "bg-slate-900 border border-slate-800/50" : "bg-white border border-slate-200"}`}>
+              <div className={`w-full max-w-[1000px] grid lg:grid-cols-[1.1fr_0.9fr] rounded-3xl overflow-hidden shadow-[0_10px_50px_-15px_rgba(0,0,0,0.5)] backdrop-blur-md ${dk ? "bg-slate-900/50 border border-slate-800/50" : "bg-white/50 border border-slate-200"}`}>
 
                 {/* Left: Safety Briefing Panel */}
-                <div className={`p-10 flex flex-col justify-between text-slate-100 ${dk ? "bg-slate-900/80" : "bg-gradient-to-br from-indigo-950 to-slate-900"}`}>
+                <div className={`p-10 flex flex-col justify-between text-slate-100 ${dk ? "bg-slate-900/80" : "bg-gradient-to-br from-indigo-950/90 to-slate-900/90"}`}>
                   <div>
                     <div className="flex items-center gap-3 mb-6">
                       <HardHat className="w-8 h-8 text-amber-500" />
@@ -601,7 +601,7 @@ export default function App() {
                 </div>
 
                 {/* Right: Authentication Form */}
-                <div className={`p-10 flex flex-col justify-center ${dk ? "bg-slate-900 text-slate-100" : "bg-white text-slate-900"}`}>
+                <div className={`p-10 flex flex-col justify-center ${dk ? "bg-slate-900/80 text-slate-100" : "bg-white/85 text-slate-900"}`}>
                   <div className="space-y-4">
                     <div>
                       <h2 className="text-2xl font-extrabold tracking-tight">Operator Shift Check-In</h2>
@@ -693,14 +693,13 @@ export default function App() {
 
 
                   {/* Register CTA link */}
-                  <div className="mt-6 pt-5 border-t border-slate-700/30 flex justify-center">
+                  <div className="mt-4 flex justify-center">
                     <button
                       type="button"
                       onClick={() => setCurrentPage("register")}
-                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-[11px] font-mono font-semibold transition-all ${dk ? "border-slate-700 bg-slate-800/40 text-slate-300 hover:border-cyan-500/50 hover:text-cyan-400" : "border-slate-200 bg-slate-50 text-slate-600 hover:border-cyan-500/30 hover:text-cyan-600"
-                        }`}
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm tracking-widest shadow-lg transition-all flex items-center justify-center gap-2"
                     >
-                      <Plus className="w-3.5 h-3.5" /> New Operator Registration
+                      <Plus className="w-5 h-5" /> NEW OPERATOR REGISTRATION
                     </button>
                   </div>
 
