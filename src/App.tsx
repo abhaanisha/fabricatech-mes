@@ -396,11 +396,15 @@ export default function App() {
       <header className={`border-b ${theme === "dark" ? "border-slate-800 bg-[#0e1420]/90" : "border-slate-200 bg-white/90"} backdrop-blur sticky top-0 z-40`}>
         <div className="max-w-[1600px] mx-auto flex items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-7 h-7 text-cyan-500" />
-              <div>
-                <span className="text-xs font-mono tracking-widest uppercase opacity-60">Industrial Intelligence</span>
-                <h1 className="text-base font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">FabricaTech MES</h1>
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="w-9 h-9 text-cyan-500" />
+              <div className="flex flex-col">
+                <span className={`text-[11px] font-mono font-bold tracking-[0.2em] uppercase ${theme === "dark" ? "text-slate-300" : "text-slate-500"}`}>
+                  Industrial Intelligence
+                </span>
+                <h1 className="text-2xl font-black tracking-tighter text-cyan-500 leading-none mt-0.5">
+                  FabricaTech MES
+                </h1>
               </div>
             </div>
 
