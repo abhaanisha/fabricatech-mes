@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { 
-  ShieldCheck, 
-  AlertTriangle, 
-  CheckCircle2, 
-  XCircle, 
-  Clock, 
-  Sun, 
-  Moon, 
-  HardHat, 
-  Zap, 
-  Gauge, 
+import {
+  ShieldCheck,
+  AlertTriangle,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Sun,
+  Moon,
+  HardHat,
+  Zap,
+  Gauge,
   Microscope,
   FileText,
   Power,
@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 // Types
-type Page = "safety" | "dashboard" | "workorder" | "inspection" | "maintenance" | "report" | "faq";
+type Page = "safety" | "register" | "dashboard" | "workorder" | "inspection" | "maintenance" | "report" | "faq";
 type Priority = "low" | "medium" | "high" | "critical";
 type ShiftType = "day" | "swing" | "night";
 type DefectType = "cosmetic" | "dimensional" | "functional" | "material";
@@ -53,14 +53,26 @@ export default function App() {
     }
     return "dark";
   });
-  
+
   const [currentPage, setCurrentPage] = useState<Page>("safety");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [employeeId, setEmployeeId] = useState("");
   const [accessCode, setAccessCode] = useState("");
   const [selectedShift, setSelectedShift] = useState<ShiftType>("day");
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-  
+
+  // Registration state
+  const [registeredUsers, setRegisteredUsers] = useState<Record<string, string>>({});
+  const [regName, setRegName] = useState("");
+  const [regEmail, setRegEmail] = useState("");
+  const [regContact, setRegContact] = useState("");
+  const [regDept, setRegDept] = useState("");
+  const [regRole, setRegRole] = useState("");
+  const [regId, setRegId] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regConfirm, setRegConfirm] = useState("");
+  const [regErrors, setRegErrors] = useState<Record<string, string>>({});
+
   // Work order state
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<WorkOrder | null>(null);
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([
@@ -132,6 +144,15 @@ export default function App() {
     noSpaces: !/\s/.test(accessCode) && accessCode.length > 0,
   };
 
+  // Register form — real-time password checklist
+  const regPasswordCriteria = {
+    length: regPassword.length >= 6 && regPassword.length <= 12,
+    hasUpper: /[A-Z]/.test(regPassword),
+    hasLower: /[a-z]/.test(regPassword),
+    hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(regPassword),
+    noSpaces: !/\s/.test(regPassword) && regPassword.length > 0,
+  };
+
   const validators = {
     employeeId: (val: string) => {
       const alphanumeric = /^[A-Z0-9]{6}$/;
@@ -183,6 +204,77 @@ export default function App() {
     setTimeout(() => setNotification(null), 5000);
   };
 
+  const WHITELIST: Record<string, string> = {
+    "A28076": "Shift#1A",
+    "B39124": "Line@2B",
+    "C47801": "Press#3C",
+    "D56392": "Build@4D",
+    "E61087": "Plant#5E"
+  };
+
+  const validateRegField = (field: string, value: string, secondaryValue: string = "") => {
+    let error = "";
+    if (field === "regName") {
+      if (!value.trim()) error = "Full name required";
+      else if (!/^[A-Za-z\s]+$/.test(value.trim())) error = "Name must contain letters only (no numbers or symbols)";
+    } else if (field === "regEmail") {
+      if (!value) error = "Email required";
+      else if (!/^[a-zA-Z0-9._%+-]+@fabtech\.com$/.test(value)) error = "Must end with @fabtech.com";
+    } else if (field === "regContact") {
+      if (!value) error = "Contact number required";
+      else if (!/^\d{10}$/.test(value)) error = "Must be exactly 10 digits";
+    } else if (field === "regDept") {
+      if (!value.trim()) error = "Department required";
+    } else if (field === "regRole") {
+      if (!value) error = "Please select a role";
+    } else if (field === "regId") {
+      if (!value) error = "Employee ID required";
+      else if (!/^[A-Z0-9]{6}$/.test(value)) error = "Must be 6 uppercase alphanumeric chars";
+      else if (WHITELIST[value] || registeredUsers[value]) error = "Employee ID already registered";
+    } else if (field === "regPassword") {
+      if (!value) error = "Password required";
+      else if (value.length < 6 || value.length > 12) error = "6-12 characters required";
+      else if (/\s/.test(value)) error = "No spaces allowed";
+      else if (!/[A-Z]/.test(value)) error = "Missing uppercase letter";
+      else if (!/[a-z]/.test(value)) error = "Missing lowercase letter";
+      else if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) error = "Missing special character (!@#$%^&*)";
+    } else if (field === "regConfirm") {
+      if (!value) error = "Please confirm your password";
+      else if (value !== secondaryValue) error = "Passwords do not match";
+    }
+
+    setRegErrors(prev => ({
+      ...prev,
+      [field]: error
+    }));
+
+    return error === "";
+  };
+
+  const handleRegister = () => {
+    const isV1 = validateRegField("regName", regName);
+    const isV2 = validateRegField("regEmail", regEmail);
+    const isV3 = validateRegField("regContact", regContact);
+    const isV4 = validateRegField("regDept", regDept);
+    const isV5 = validateRegField("regRole", regRole);
+    const isV6 = validateRegField("regId", regId);
+    const isV7 = validateRegField("regPassword", regPassword);
+    const isV8 = validateRegField("regConfirm", regConfirm, regPassword);
+
+    const hasErrors = !isV1 || !isV2 || !isV3 || !isV4 || !isV5 || !isV6 || !isV7 || !isV8;
+    if (hasErrors) return;
+
+    // Register the user
+    setRegisteredUsers(prev => ({ ...prev, [regId]: regPassword }));
+    showNotification(`Operator ${regId} (${regName}) registered successfully. You may now log in.`, "success");
+    // Pre-fill login and navigate back
+    setEmployeeId(regId);
+    setAccessCode("");
+    setRegName(""); setRegEmail(""); setRegContact(""); setRegDept(""); setRegRole("");
+    setRegId(""); setRegPassword(""); setRegConfirm(""); setRegErrors({});
+    setCurrentPage("safety");
+  };
+
   const handleLogin = () => {
     const idValid = validateField("employeeId", employeeId);
     const codeValid = validateField("accessCode", accessCode);
@@ -193,15 +285,8 @@ export default function App() {
     }
 
     if (idValid && codeValid) {
-      const AUTHORIZED_USERS: Record<string, string> = {
-        "A28076": "Shift#1A",
-        "B39124": "Line@2B",
-        "C47801": "Press#3C",
-        "D56392": "Build@4D",
-        "E61087": "Plant#5E"
-      };
-
-      if (AUTHORIZED_USERS[employeeId] === accessCode) {
+      const allUsers = { ...WHITELIST, ...registeredUsers };
+      if (allUsers[employeeId] === accessCode) {
         showNotification("Shift Access Granted. Loading MES Dashboard.", "success");
         setIsAuthenticated(true);
         setCurrentPage("dashboard");
@@ -234,10 +319,10 @@ export default function App() {
       };
       setWorkOrders((prev) => [...prev, newWo]);
       setSelectedWorkOrder(newWo);
-      
+
       showNotification(`Work Order ${newWo.id} created successfully for batch ${batchCode}`, "success");
       setCurrentPage("inspection");
-      
+
       // Reset form
       setPartNumber("");
       setBatchCode("");
@@ -250,7 +335,7 @@ export default function App() {
   const handleInspectionSubmit = () => {
     const notesValid = validateField("inspectionNotes", inspectionNotes);
     if (!notesValid) return;
-    
+
     if (!selectedWorkOrder) {
       showNotification("Please select a target Work Order first", "error");
       return;
@@ -269,9 +354,9 @@ export default function App() {
     };
 
     setInspections(prev => [newInspection, ...prev]);
-    
+
     // Update WO status
-    setWorkOrders(prev => prev.map(wo => 
+    setWorkOrders(prev => prev.map(wo =>
       wo.id === selectedWorkOrder.id ? { ...wo, status: isPass ? "inspected" : "failed" } : wo
     ));
 
@@ -288,19 +373,17 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen font-sans transition-colors duration-300 flex flex-col ${
-      dk ? "bg-[#0b0f17] text-slate-100" : "bg-slate-100 text-slate-900"
-    }`}>
-      
+    <div className={`min-h-screen font-sans transition-colors duration-300 flex flex-col ${dk ? "bg-[#0b0f17] text-slate-100" : "bg-slate-100 text-slate-900"
+      }`}>
+
       {/* Dynamic Notification Toast */}
       {notification && (
-        <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl border backdrop-blur animate-slide-in ${
-          notification.type === "error" 
-            ? "bg-red-500/10 text-red-400 border-red-500/30" 
-            : notification.type === "success" 
-            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" 
+        <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl border backdrop-blur animate-slide-in ${notification.type === "error"
+          ? "bg-red-500/10 text-red-400 border-red-500/30"
+          : notification.type === "success"
+            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
             : "bg-amber-500/10 text-amber-400 border-amber-500/30"
-        }`}>
+          }`}>
           {notification.type === "error" ? <XCircle className="w-5 h-5" /> : <CheckCircle2 className="w-5 h-5" />}
           <div>
             <div className="text-xs font-mono font-bold uppercase tracking-wider">SYSTEM ALERT</div>
@@ -345,11 +428,10 @@ export default function App() {
 
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className={`p-2 rounded-xl transition-all border ${
-                theme === "dark" 
-                  ? "bg-slate-800 border-slate-700 text-amber-300 hover:bg-slate-700" 
-                  : "bg-white border-slate-200 text-indigo-600 hover:bg-slate-50"
-              }`}
+              className={`p-2 rounded-xl transition-all border ${theme === "dark"
+                ? "bg-slate-800 border-slate-700 text-amber-300 hover:bg-slate-700"
+                : "bg-white border-slate-200 text-indigo-600 hover:bg-slate-50"
+                }`}
               title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -370,12 +452,11 @@ export default function App() {
 
       {/* Main Content & Page Flow */}
       <div className="flex-1 flex overflow-hidden">
-        
+
         {/* SIDEBAR FOR AUTHENTICATED USERS */}
         {isAuthenticated && (
-          <nav className={`hidden md:flex w-[240px] border-r flex-col ${
-            theme === "dark" ? "border-slate-800 bg-[#0e1420]/40" : "border-slate-200 bg-slate-50/50"
-          }`}>
+          <nav className={`hidden md:flex w-[240px] border-r flex-col ${theme === "dark" ? "border-slate-800 bg-[#0e1420]/40" : "border-slate-200 bg-slate-50/50"
+            }`}>
             <div className="p-4 space-y-1.5 flex-1">
               {[
                 { id: "dashboard", label: "PRODUCTION", icon: <Gauge className="w-4 h-4" />, desc: "Telemetry & OEE" },
@@ -388,11 +469,10 @@ export default function App() {
                 <button
                   key={item.id}
                   onClick={() => setCurrentPage(item.id as Page)}
-                  className={`w-full text-left px-3.5 py-3 rounded-xl border transition-all flex items-center gap-3 ${
-                    currentPage === item.id
-                      ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400 font-medium shadow-sm"
-                      : `border-transparent ${sidebarInactive}`
-                  }`}
+                  className={`w-full text-left px-3.5 py-3 rounded-xl border transition-all flex items-center gap-3 ${currentPage === item.id
+                    ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400 font-medium shadow-sm"
+                    : `border-transparent ${sidebarInactive}`
+                    }`}
                 >
                   <div className={`${currentPage === item.id ? "text-cyan-400" : "opacity-60"}`}>
                     {item.icon}
@@ -412,7 +492,7 @@ export default function App() {
                   <span className="text-[11px] font-mono font-bold text-emerald-400">{telemetry.oee}%</span>
                 </div>
                 <div className={`h-2 rounded-full overflow-hidden ${dk ? "bg-slate-800" : "bg-slate-200"}`}>
-                  <div 
+                  <div
                     className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-1000"
                     style={{ width: `${telemetry.oee}%` }}
                   />
@@ -424,12 +504,12 @@ export default function App() {
 
         {/* PAGE CONTENT */}
         <main className="flex-1 overflow-y-auto">
-          
+
           {/* PAGE 1: SAFETY CHECKPOINT (LOGIN) */}
           {currentPage === "safety" && (
             <div className="min-h-full flex items-center justify-center p-6">
               <div className={`w-full max-w-[1000px] grid lg:grid-cols-[1.1fr_0.9fr] gap-8 border rounded-3xl overflow-hidden shadow-2xl backdrop-blur-sm ${dk ? "bg-slate-900/20 border-slate-800/50" : "bg-white border-slate-200"}`}>
-                
+
                 {/* Left: Safety Briefing Panel */}
                 <div className={`p-8 flex flex-col justify-between ${dk ? "bg-slate-900/60" : "bg-slate-50"}`}>
                   <div>
@@ -477,133 +557,296 @@ export default function App() {
 
                 {/* Right: Authentication Form */}
                 <div className="p-8 flex flex-col justify-center">
-                  <div className="mb-6">
-                    <h2 className="text-xl font-bold">Operator Shift Check-In</h2>
-                    <p className="text-xs opacity-60 mt-1">Enter credentials to unlock production interface.</p>
-                  </div>
-
                   <div className="space-y-4">
-                    
+                    <div>
+                      <h2 className="text-xl font-bold">Operator Shift Check-In</h2>
+                      <p className="text-xs opacity-60 mt-1">Enter credentials to unlock production interface.</p>
+                    </div>
+
                     {/* Shift Selector */}
                     <div>
                       <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Select Your Shift</label>
                       <div className="grid grid-cols-3 gap-2">
                         {(["day", "swing", "night"] as ShiftType[]).map((s) => (
                           <label key={s} className="relative cursor-pointer">
-                            <input 
-                              type="radio" 
-                              name="shift" 
-                              checked={selectedShift === s} 
+                            <input
+                              type="radio"
+                              name="shift"
+                              value={s}
+                              checked={selectedShift === s}
                               onChange={() => setSelectedShift(s)}
-                              className="sr-only" 
+                              className="sr-only"
                             />
-                            <div className={`text-center py-2.5 rounded-xl border font-mono text-xs font-bold uppercase transition-all ${
-                              selectedShift === s 
-                                ? "bg-cyan-500/10 border-cyan-500/50 text-cyan-400" 
-                                : dk ? "bg-slate-800/40 border-slate-800 hover:border-slate-700 opacity-60" : "bg-slate-100 border-slate-300 text-slate-500 hover:border-slate-400"
-                            }`}>
-                              {s}
-                            </div>
+                            <span className={`block text-center py-2 rounded-xl border text-xs font-mono font-bold uppercase transition-all ${selectedShift === s
+                              ? "border-cyan-500 bg-cyan-500/10 text-cyan-400"
+                              : dk ? "border-slate-700 text-slate-400 hover:border-slate-600" : "border-slate-200 text-slate-500 hover:border-slate-300"
+                              }`}>{s}</span>
                           </label>
                         ))}
                       </div>
                     </div>
 
-                    {/* Employee ID Input */}
+                    {/* Employee ID */}
                     <div>
                       <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Employee ID (e.g., A28076)</label>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          value={employeeId}
-                          onChange={(e) => {
-                            setEmployeeId(e.target.value.toUpperCase());
-                            validateField("employeeId", e.target.value.toUpperCase());
-                          }}
-                          placeholder="ALPHANUMERIC"
-                          className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${
-                            validationErrors.employeeId ? "border-red-500/50 focus:border-red-500" : "border-slate-700/50 focus:border-cyan-500/50"
-                          }`}
-                        />
-                      </div>
-                      {validationErrors.employeeId && (
-                        <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {validationErrors.employeeId}</p>
-                      )}
+                      <input
+                        type="text"
+                        value={employeeId}
+                        maxLength={6}
+                        onChange={(e) => { setEmployeeId(e.target.value.toUpperCase()); validateField("employeeId", e.target.value.toUpperCase()); }}
+                        placeholder="A28076"
+                        className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${validationErrors.employeeId ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                      />
+                      {validationErrors.employeeId && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {validationErrors.employeeId}</p>}
                     </div>
 
-                    {/* Access Code Input */}
+                    {/* Access Code */}
                     <div>
                       <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Access Code (Password)</label>
-                      <div className="relative">
-                        <input
-                          type="password"
-                          value={accessCode}
-                          onChange={(e) => {
-                            setAccessCode(e.target.value);
-                            validateField("accessCode", e.target.value);
-                          }}
-                          placeholder="REQUIRED CREDENTIALS"
-                          className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${
-                            validationErrors.accessCode ? "border-red-500/50 focus:border-red-500" : "border-slate-700/50 focus:border-cyan-500/50"
-                          }`}
-                        />
-                      </div>
-                      
-                      {/* Password validation Checklist */}
-                      <div className={`mt-3 p-3 rounded-xl border text-[11px] space-y-1 ${panelBg}`}>
-                        <div className="font-mono text-xs opacity-70 mb-1">Access Code Criteria Check:</div>
-                        <div className="flex items-center gap-2">
-                          {passwordCriteria.length ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <XCircle className="w-3.5 h-3.5 text-slate-500" />}
-                          <span className={passwordCriteria.length ? "text-emerald-400" : "opacity-60"}>6 to 12 characters</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {passwordCriteria.hasUpper ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <XCircle className="w-3.5 h-3.5 text-slate-500" />}
-                          <span className={passwordCriteria.hasUpper ? "text-emerald-400" : "opacity-60"}>At least 1 UPPERCASE letter</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {passwordCriteria.hasLower ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <XCircle className="w-3.5 h-3.5 text-slate-500" />}
-                          <span className={passwordCriteria.hasLower ? "text-emerald-400" : "opacity-60"}>At least 1 lowercase letter</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {passwordCriteria.hasSpecial ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <XCircle className="w-3.5 h-3.5 text-slate-500" />}
-                          <span className={passwordCriteria.hasSpecial ? "text-emerald-400" : "opacity-60"}>At least 1 special character (!@#$%^&*)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {passwordCriteria.noSpaces ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <XCircle className="w-3.5 h-3.5 text-slate-500" />}
-                          <span className={passwordCriteria.noSpaces ? "text-emerald-400" : "opacity-60"}>No blank spaces</span>
-                        </div>
+                      <input
+                        type="password"
+                        value={accessCode}
+                        onChange={(e) => { setAccessCode(e.target.value); validateField("accessCode", e.target.value); }}
+                        placeholder="••••••••"
+                        className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${validationErrors.accessCode ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                      />
+                      {/* Password Criteria */}
+                      <div className={`mt-3 p-3 rounded-xl border space-y-1.5 text-[11px] font-mono ${dk ? "border-slate-800/50 bg-slate-800/20" : "border-slate-200 bg-slate-50"}`}>
+                        {[
+                          [passwordCriteria.length, "6 to 12 characters"],
+                          [passwordCriteria.hasUpper, "At least 1 UPPERCASE letter"],
+                          [passwordCriteria.hasLower, "At least 1 lowercase letter"],
+                          [passwordCriteria.hasSpecial, "At least 1 special character (!@#$%^&*)"],
+                          [passwordCriteria.noSpaces, "No blank spaces"],
+                        ].map(([ok, label], i) => (
+                          <div key={i} className="flex items-center gap-2">
+                            {ok ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <XCircle className="w-3.5 h-3.5 text-slate-500" />}
+                            <span className={ok ? "text-emerald-400" : "opacity-60"}>{String(label)}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
 
                     <button
                       onClick={handleLogin}
                       disabled={!passwordCriteria.length || !passwordCriteria.hasUpper || !passwordCriteria.hasLower || !passwordCriteria.hasSpecial || !passwordCriteria.noSpaces}
-                      className="w-full relative overflow-hidden group mt-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm tracking-wider shadow-lg shadow-emerald-900/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm tracking-wider shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       BEGIN SHIFT OPERATIONS
                     </button>
 
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={() => setCurrentPage("faq")}
-                      className={`w-full py-2.5 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs font-mono transition-all ${
-                        dk ? "border-slate-700 bg-slate-800/40 text-slate-300 hover:bg-slate-800" : "border-slate-300 bg-slate-100 text-slate-600 hover:bg-slate-200"
-                      }`}
+                      className={`w-full py-2.5 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs font-mono transition-all ${dk ? "border-slate-700 bg-slate-800/40 text-slate-300 hover:bg-slate-800" : "border-slate-300 bg-slate-100 text-slate-600 hover:bg-slate-200"
+                        }`}
                     >
                       <HelpCircle className="w-4 h-4" /> VIEW OPERATOR FAQ
                     </button>
+                  </div>
 
+
+
+                  {/* Register CTA link */}
+                  <div className="mt-6 pt-5 border-t border-slate-700/30 flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage("register")}
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-[11px] font-mono font-semibold transition-all ${dk ? "border-slate-700 bg-slate-800/40 text-slate-300 hover:border-cyan-500/50 hover:text-cyan-400" : "border-slate-200 bg-slate-50 text-slate-600 hover:border-cyan-500/30 hover:text-cyan-600"
+                        }`}
+                    >
+                      <Plus className="w-3.5 h-3.5" /> New Operator Registration
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PAGE: REGISTER — Full standalone page */}
+          {currentPage === "register" && (
+            <div className="min-h-screen flex items-center justify-center p-6">
+              <div className={`w-full max-w-2xl rounded-3xl border shadow-2xl overflow-hidden ${card}`}>
+                {/* Header */}
+                <div className="p-8 border-b bg-gradient-to-br from-cyan-500/10 to-blue-600/5" style={{ borderColor: dk ? "rgba(71,85,105,0.3)" : "rgba(226,232,240,1)" }}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h1 className="text-2xl font-extrabold tracking-tight">New Operator Registration</h1>
+                      <p className={`text-xs mt-1 ${dk ? "opacity-60" : "text-slate-500"}`}>All fields required. Your Employee ID will be your login username.</p>
+                    </div>
+                    <button
+                      onClick={() => setCurrentPage("safety")}
+                      className={`text-xs font-mono font-bold px-4 py-2 rounded-xl border transition-all ${dk ? "border-slate-700 text-slate-400 hover:text-slate-200 hover:border-slate-600" : "border-slate-200 text-slate-500 hover:border-slate-400"}`}
+                    >← BACK TO LOGIN</button>
                   </div>
                 </div>
 
+                {/* Form body */}
+                <div className="p-8 grid sm:grid-cols-2 gap-5">
+                  {/* Full Name */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Full Name</label>
+                    <input type="text" value={regName} onChange={(e) => { const v = e.target.value; setRegName(v); validateRegField("regName", v); }}
+                      placeholder="e.g. Abha Singh Sardar"
+                      className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all ${regErrors.regName ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                    />
+                    {regErrors.regName && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {regErrors.regName}</p>}
+                  </div>
+
+                  {/* Email */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Organizational Email (@fabtech.com)</label>
+                    <input type="email" value={regEmail} onChange={(e) => { const v = e.target.value; setRegEmail(v); validateRegField("regEmail", v); }}
+                      placeholder="yourname@fabtech.com"
+                      className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all ${regErrors.regEmail ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                    />
+                    {regErrors.regEmail && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {regErrors.regEmail}</p>}
+                  </div>
+
+                  {/* Contact */}
+                  <div>
+                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Contact Number</label>
+                    <input type="tel" value={regContact} maxLength={10} onChange={(e) => { const v = e.target.value.replace(/\D/g, ""); setRegContact(v); validateRegField("regContact", v); }}
+                      placeholder="9876543210"
+                      className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all font-mono ${regErrors.regContact ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                    />
+                    {regErrors.regContact && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {regErrors.regContact}</p>}
+                  </div>
+
+                  {/* Department */}
+                  <div>
+                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Department</label>
+                    <select value={regDept} onChange={(e) => { 
+                        const v = e.target.value; 
+                        setRegDept(v); 
+                        setRegRole(""); // Reset role when dept changes
+                        validateRegField("regDept", v); 
+                      }}
+                      className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all ${regErrors.regDept ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                    >
+                      <option value="">Select department…</option>
+                      <option value="Production">Production</option>
+                      <option value="Quality Assurance">Quality Assurance</option>
+                      <option value="Maintenance">Maintenance</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Logistics & Supply">Logistics & Supply</option>
+                    </select>
+                    {regErrors.regDept && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {regErrors.regDept}</p>}
+                  </div>
+
+                  {/* Role Dropdown */}
+                  <div>
+                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Role</label>
+                    <select value={regRole} onChange={(e) => { const v = e.target.value; setRegRole(v); validateRegField("regRole", v); }}
+                      disabled={!regDept}
+                      className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed ${regErrors.regRole ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                    >
+                      <option value="">Select your role…</option>
+                      {regDept === "Production" && (
+                        <>
+                          <option value="Floor Operator">Floor Operator</option>
+                          <option value="Senior Operator">Senior Operator</option>
+                          <option value="Production Supervisor">Production Supervisor</option>
+                          <option value="Plant Manager">Plant Manager</option>
+                        </>
+                      )}
+                      {regDept === "Quality Assurance" && (
+                        <>
+                          <option value="QA Auditor">QA Auditor</option>
+                          <option value="Safety Officer">Safety Officer</option>
+                        </>
+                      )}
+                      {regDept === "Maintenance" && (
+                        <option value="Maintenance Lead">Maintenance Lead</option>
+                      )}
+                      {regDept === "Engineering" && (
+                        <option value="Test Engineer">Test Engineer</option>
+                      )}
+                      {regDept === "Logistics & Supply" && (
+                        <>
+                          <option value="Logistics Coordinator">Logistics Coordinator</option>
+                          <option value="Supply Chain Manager">Supply Chain Manager</option>
+                        </>
+                      )}
+                    </select>
+                    {regErrors.regRole && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {regErrors.regRole}</p>}
+                  </div>
+
+                  {/* Employee ID */}
+                  <div>
+                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Employee ID — Your Login Username (6 chars)</label>
+                    <input type="text" value={regId} maxLength={6} onChange={(e) => { const v = e.target.value.toUpperCase(); setRegId(v); validateRegField("regId", v); }}
+                      placeholder="e.g. F99001"
+                      className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all font-mono ${regErrors.regId ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                    />
+                    {regErrors.regId && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {regErrors.regId}</p>}
+                  </div>
+
+                  {/* Password */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Create Password</label>
+                    <input type="password" value={regPassword} onChange={(e) => { const v = e.target.value; setRegPassword(v); validateRegField("regPassword", v); if (regConfirm) validateRegField("regConfirm", regConfirm, v); }}
+                      placeholder="••••••••"
+                      className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all font-mono ${regErrors.regPassword ? "border-red-500/50" : "border-slate-700/50 focus:border-cyan-500/50"}`}
+                    />
+                    <div className={`mt-2 p-3 rounded-xl border grid grid-cols-2 gap-1.5 text-[11px] font-mono ${dk ? "border-slate-800/50 bg-slate-800/20" : "border-slate-200 bg-slate-50"}`}>
+                      {[
+                        [regPasswordCriteria.length, "6 to 12 characters"],
+                        [regPasswordCriteria.hasUpper, "1 UPPERCASE letter"],
+                        [regPasswordCriteria.hasLower, "1 lowercase letter"],
+                        [regPasswordCriteria.hasSpecial, "1 special character"],
+                        [regPasswordCriteria.noSpaces, "No blank spaces"],
+                      ].map(([ok, label], i) => (
+                        <div key={i} className="flex items-center gap-1.5">
+                          {ok ? <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" /> : <XCircle className="w-3 h-3 text-slate-500 shrink-0" />}
+                          <span className={ok ? "text-emerald-400" : "opacity-60"}>{String(label)}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {regErrors.regPassword && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {regErrors.regPassword}</p>}
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">Confirm Password</label>
+                    <div className="relative">
+                      <input type="password" value={regConfirm} onChange={(e) => { const v = e.target.value; setRegConfirm(v); validateRegField("regConfirm", v, regPassword); }}
+                        placeholder="••••••••"
+                        className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 pr-10 text-sm outline-none transition-all font-mono ${regErrors.regConfirm ? "border-red-500/50" : regConfirm && regConfirm === regPassword ? "border-emerald-500/50" : "border-slate-700/50 focus:border-cyan-500/50"
+                          }`}
+                      />
+                      {regConfirm.length > 0 && (
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2">
+                          {regConfirm === regPassword ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-red-400" />}
+                        </span>
+                      )}
+                    </div>
+                    {regErrors.regConfirm && <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {regErrors.regConfirm}</p>}
+                  </div>
+
+                  {/* Submit */}
+                  <div className="sm:col-span-2">
+                    <button onClick={handleRegister}
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-sm tracking-wider shadow-lg transition-all"
+                    >
+                      CREATE OPERATOR ACCOUNT
+                    </button>
+                    <p className={`text-center text-[11px] font-mono mt-3 ${dk ? "opacity-50" : "text-slate-500"}`}>
+                      Already registered?{" "}
+                      <button onClick={() => setCurrentPage("safety")} className="text-cyan-400 hover:underline">Sign In</button>
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
           {/* PAGE 2: PRODUCTION DASHBOARD */}
+
           {currentPage === "dashboard" && isAuthenticated && (
             <div className="p-6 max-w-[1400px] mx-auto space-y-6">
-              
+
               <div className={`flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4 ${divider}`}>
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight">OEE Live Telemetry</h2>
@@ -640,7 +883,7 @@ export default function App() {
               </div>
 
               <div className="grid lg:grid-cols-3 gap-6">
-                
+
                 {/* Active Work Orders */}
                 <div className={`lg:col-span-2 p-5 rounded-2xl border ${card}`}>
                   <div className="flex justify-between items-center mb-4">
@@ -672,12 +915,11 @@ export default function App() {
                               </span>
                             </td>
                             <td>
-                              <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${
-                                wo.status === "pending" ? "text-amber-400 border-amber-500/30" :
+                              <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${wo.status === "pending" ? "text-amber-400 border-amber-500/30" :
                                 wo.status === "inspected" ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" :
-                                wo.status === "resolved" ? "text-blue-400 border-blue-500/30 bg-blue-500/10" :
-                                "text-red-400 border-red-500/30 bg-red-500/10"
-                              }`}>
+                                  wo.status === "resolved" ? "text-blue-400 border-blue-500/30 bg-blue-500/10" :
+                                    "text-red-400 border-red-500/30 bg-red-500/10"
+                                }`}>
                                 {wo.status.toUpperCase()}
                               </span>
                             </td>
@@ -706,7 +948,7 @@ export default function App() {
                         </button>
                       </div>
                     )}
-                    
+
                     {telemetry.vibration > 63.5 && (
                       <div className="p-3.5 bg-amber-500/5 border border-amber-500/20 rounded-xl transition-all duration-500 animate-in fade-in zoom-in-95">
                         <div className="flex justify-between font-mono text-xs text-amber-500 font-bold mb-1">
@@ -750,7 +992,7 @@ export default function App() {
               </div>
 
               <div className={`p-6 rounded-2xl border space-y-5 ${card}`}>
-                
+
                 {/* Part Number input with custom validation */}
                 <div>
                   <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">
@@ -764,9 +1006,8 @@ export default function App() {
                       validateField("partNumber", e.target.value.toUpperCase());
                     }}
                     placeholder="e.g. AB-1234"
-                    className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${
-                      validationErrors.partNumber ? "border-red-500/50 focus:border-red-500" : "border-slate-700/50 focus:border-cyan-500/50"
-                    }`}
+                    className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${validationErrors.partNumber ? "border-red-500/50 focus:border-red-500" : "border-slate-700/50 focus:border-cyan-500/50"
+                      }`}
                   />
                   {validationErrors.partNumber && (
                     <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {validationErrors.partNumber}</p>
@@ -786,9 +1027,8 @@ export default function App() {
                       validateField("batchCode", e.target.value.toUpperCase());
                     }}
                     placeholder="e.g. B-24Q3-882"
-                    className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${
-                      validationErrors.batchCode ? "border-red-500/50 focus:border-red-500" : "border-slate-700/50 focus:border-cyan-500/50"
-                    }`}
+                    className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono ${validationErrors.batchCode ? "border-red-500/50 focus:border-red-500" : "border-slate-700/50 focus:border-cyan-500/50"
+                      }`}
                   />
                   {validationErrors.batchCode && (
                     <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {validationErrors.batchCode}</p>
@@ -809,11 +1049,10 @@ export default function App() {
                           onChange={() => setSelectedPriority(p)}
                           className="sr-only"
                         />
-                        <div className={`p-3 rounded-xl border text-center font-bold text-xs capitalize transition-all ${
-                          selectedPriority === p
-                            ? "bg-violet-500/10 border-violet-500/50 text-violet-400 ring-2 ring-violet-500/20"
-                            : dk ? "bg-slate-800/40 border-slate-800 hover:border-slate-700 opacity-70" : "bg-slate-100 border-slate-300 text-slate-600 hover:border-slate-400"
-                        }`}>
+                        <div className={`p-3 rounded-xl border text-center font-bold text-xs capitalize transition-all ${selectedPriority === p
+                          ? "bg-violet-500/10 border-violet-500/50 text-violet-400 ring-2 ring-violet-500/20"
+                          : dk ? "bg-slate-800/40 border-slate-800 hover:border-slate-700 opacity-70" : "bg-slate-100 border-slate-300 text-slate-600 hover:border-slate-400"
+                          }`}>
                           {p}
                         </div>
                       </label>
@@ -848,107 +1087,104 @@ export default function App() {
                     </div>
                   ) : (
                     <>
-                    {/* Work Order Selector */}
-                    <div>
-                      <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Target Work Order</label>
-                      <select 
-                        value={selectedWorkOrder?.id || ""}
-                        onChange={(e) => setSelectedWorkOrder(workOrders.find(wo => wo.id === e.target.value) || null)}
-                        className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono border-slate-700/50`}
-                      >
-                        <option value="" disabled>Select Work Order</option>
-                        {workOrders.filter(w => w.status === "pending").map((wo) => (
-                           <option key={wo.id} value={wo.id}>{wo.id} — {wo.batch}</option>
-                        ))}
-                      </select>
-                    </div>
+                      {/* Work Order Selector */}
+                      <div>
+                        <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Target Work Order</label>
+                        <select
+                          value={selectedWorkOrder?.id || ""}
+                          onChange={(e) => setSelectedWorkOrder(workOrders.find(wo => wo.id === e.target.value) || null)}
+                          className={`w-full ${inputCls} border rounded-xl px-3.5 py-2.5 text-sm transition-all outline-none font-mono border-slate-700/50`}
+                        >
+                          <option value="" disabled>Select Work Order</option>
+                          {workOrders.filter(w => w.status === "pending").map((wo) => (
+                            <option key={wo.id} value={wo.id}>{wo.id} — {wo.batch}</option>
+                          ))}
+                        </select>
+                      </div>
 
-                    {/* Pass/Fail Radio-style buttons */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold uppercase opacity-60">Status Assessment:</span>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setInspectionResult("pass")}
-                        className={`px-4 py-1.5 rounded-xl font-mono font-bold text-xs border ${
-                          inspectionResult === "pass"
-                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/50"
-                            : "bg-slate-800/40 opacity-50"
-                        }`}
-                      >
-                        PASS
-                      </button>
-                      <button
-                        onClick={() => setInspectionResult("fail")}
-                        className={`px-4 py-1.5 rounded-xl font-mono font-bold text-xs border ${
-                          inspectionResult === "fail"
-                            ? "bg-red-500/10 text-red-400 border-red-500/50"
-                            : "bg-slate-800/40 opacity-50"
-                        }`}
-                      >
-                        FAIL
-                      </button>
-                    </div>
-                  </div>
+                      {/* Pass/Fail Radio-style buttons */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono font-bold uppercase opacity-60">Status Assessment:</span>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setInspectionResult("pass")}
+                            className={`px-4 py-1.5 rounded-xl font-mono font-bold text-xs border ${inspectionResult === "pass"
+                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/50"
+                              : "bg-slate-800/40 opacity-50"
+                              }`}
+                          >
+                            PASS
+                          </button>
+                          <button
+                            onClick={() => setInspectionResult("fail")}
+                            className={`px-4 py-1.5 rounded-xl font-mono font-bold text-xs border ${inspectionResult === "fail"
+                              ? "bg-red-500/10 text-red-400 border-red-500/50"
+                              : "bg-slate-800/40 opacity-50"
+                              }`}
+                          >
+                            FAIL
+                          </button>
+                        </div>
+                      </div>
 
-                  {/* Defect Type Radios */}
-                  <div>
-                    <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Defect Root Cause Classification</label>
-                    <div className="grid grid-cols-2 gap-2.5">
-                      {(["cosmetic", "dimensional", "functional", "material"] as DefectType[]).map((type) => (
-                        <label key={type} className="relative cursor-pointer">
-                          <input
-                            type="radio"
-                            name="defectType"
-                            value={type}
-                            checked={defectType === type}
-                            onChange={() => setDefectType(type)}
-                            className="sr-only"
-                          />
-                          <div className={`p-2.5 rounded-xl border text-center transition-all ${
-                            defectType === type
-                              ? "bg-violet-500/10 border-violet-500/50 text-violet-400"
-                              : dk ? "bg-slate-800/40 border-slate-800 opacity-60" : "bg-slate-100 border-slate-300 text-slate-600"
-                          }`}>
-                            <span className="text-xs capitalize font-medium">{type}</span>
-                          </div>
+                      {/* Defect Type Radios */}
+                      <div>
+                        <label className="block text-[11px] font-mono opacity-60 mb-2 uppercase tracking-wide">Defect Root Cause Classification</label>
+                        <div className="grid grid-cols-2 gap-2.5">
+                          {(["cosmetic", "dimensional", "functional", "material"] as DefectType[]).map((type) => (
+                            <label key={type} className="relative cursor-pointer">
+                              <input
+                                type="radio"
+                                name="defectType"
+                                value={type}
+                                checked={defectType === type}
+                                onChange={() => setDefectType(type)}
+                                className="sr-only"
+                              />
+                              <div className={`p-2.5 rounded-xl border text-center transition-all ${defectType === type
+                                ? "bg-violet-500/10 border-violet-500/50 text-violet-400"
+                                : dk ? "bg-slate-800/40 border-slate-800 opacity-60" : "bg-slate-100 border-slate-300 text-slate-600"
+                                }`}>
+                                <span className="text-xs capitalize font-medium">{type}</span>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Notes with limit check */}
+                      <div>
+                        <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">
+                          Inspector Notes (Max 200 chars, no HTML tags)
                         </label>
-                      ))}
-                    </div>
-                  </div>
+                        <textarea
+                          value={inspectionNotes}
+                          onChange={(e) => {
+                            setInspectionNotes(e.target.value);
+                            validateField("inspectionNotes", e.target.value);
+                          }}
+                          placeholder="Enter fault description or tolerance deviations..."
+                          rows={3}
+                          className={`w-full ${inputCls} border border-slate-700/50 rounded-xl px-3 py-2.5 text-sm outline-none resize-none font-mono`}
+                          maxLength={200}
+                        />
+                        <div className="flex justify-between mt-1 text-[10px] font-mono opacity-50">
+                          <span>Spaces allowed. Special chars permitted.</span>
+                          <span>{inspectionNotes.length}/200</span>
+                        </div>
+                        {validationErrors.inspectionNotes && (
+                          <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {validationErrors.inspectionNotes}</p>
+                        )}
+                      </div>
 
-                  {/* Notes with limit check */}
-                  <div>
-                    <label className="block text-[11px] font-mono opacity-60 mb-1.5 uppercase tracking-wide">
-                      Inspector Notes (Max 200 chars, no HTML tags)
-                    </label>
-                    <textarea
-                      value={inspectionNotes}
-                      onChange={(e) => {
-                        setInspectionNotes(e.target.value);
-                        validateField("inspectionNotes", e.target.value);
-                      }}
-                      placeholder="Enter fault description or tolerance deviations..."
-                      rows={3}
-                      className={`w-full ${inputCls} border border-slate-700/50 rounded-xl px-3 py-2.5 text-sm outline-none resize-none font-mono`}
-                      maxLength={200}
-                    />
-                    <div className="flex justify-between mt-1 text-[10px] font-mono opacity-50">
-                      <span>Spaces allowed. Special chars permitted.</span>
-                      <span>{inspectionNotes.length}/200</span>
-                    </div>
-                    {validationErrors.inspectionNotes && (
-                      <p className="text-[11px] text-red-400 mt-1 font-mono">✕ {validationErrors.inspectionNotes}</p>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={handleInspectionSubmit}
-                    disabled={!!validationErrors.inspectionNotes}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm"
-                  >
-                    SAVE QUALITY RECORD
-                  </button>
-                  </>
+                      <button
+                        onClick={handleInspectionSubmit}
+                        disabled={!!validationErrors.inspectionNotes}
+                        className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm"
+                      >
+                        SAVE QUALITY RECORD
+                      </button>
+                    </>
                   )}
                 </div>
 
@@ -1002,8 +1238,8 @@ export default function App() {
                               Failed Job: {wo.id} • Batch: {wo.batch}
                             </div>
                           </div>
-                          
-                          <button 
+
+                          <button
                             onClick={() => {
                               setWorkOrders(prev => prev.map(w => w.id === wo.id ? { ...w, status: "resolved" } : w));
                               showNotification(`LOTO procedure cleared. Machine at ${wo.station} is unlocked.`, "success");
@@ -1124,7 +1360,7 @@ export default function App() {
                   <p className={`text-xs mt-1 ${dk ? "opacity-60" : "text-slate-500"}`}>System instructions and troubleshooting for FabricaTech MES.</p>
                 </div>
                 {!isAuthenticated && (
-                  <button 
+                  <button
                     onClick={() => setCurrentPage("safety")}
                     className="px-4 py-2 font-mono text-xs font-bold border border-cyan-500/50 text-cyan-500 bg-cyan-500/10 rounded-xl shadow-sm transition hover:bg-cyan-500/20"
                   >
@@ -1159,16 +1395,16 @@ export default function App() {
       {/* ASSIGNMENT FOOTER WITH INNOVATIVE DESIGN */}
       <footer className={`border-t p-3 lg:p-4 text-center font-mono tracking-wider flex flex-col md:flex-row justify-between items-center gap-3 relative z-10 ${dk ? "border-slate-800/80 bg-slate-900/90 text-slate-400" : "border-slate-200 bg-white text-slate-500 shadow-[0_-4px_10px_rgba(0,0,0,0.02)]"}`}>
         <div className="text-[10px] md:text-[11px] text-left leading-relaxed">
-          <span className="font-bold">MN204 HMI</span><br/>
-          <span className="opacity-80">Dr. Pradipta Biswas</span><br/>
+          <span className="font-bold">MN204 HMI</span><br />
+          <span className="opacity-80">Dr. Pradipta Biswas</span><br />
           <strong className={dk ? "text-cyan-400 md:text-xs" : "text-cyan-700 md:text-xs"}>Indian Institute of Science</strong>
         </div>
-        
+
         <div className="text-[10px] md:text-[11px] font-bold tracking-widest text-center flex flex-col items-center">
           <span className="p-1 px-3 border rounded-xl mb-1 bg-current opacity-20"></span>
           <span>FABRICATECH MES • SYSTEM ONLINE</span>
         </div>
-        
+
         <div className="text-[10px] md:text-[11px] text-right leading-relaxed flex flex-col items-end justify-end">
           <strong className={dk ? "text-violet-400 md:text-xs" : "text-violet-700 md:text-xs"}>Abha Singh Sardar</strong>
           <span className="opacity-80 font-bold">SR No. 28076</span>

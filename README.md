@@ -23,16 +23,25 @@ To access the dashboard, operators must clear the initial OSHA Safety Checkpoint
 | **M44556** | **`Maint@12M`** | Maintenance Lead |
 | **T88771** | **`Test$77T`** | Test Engineer |
 
+> **Note:** New operators can also register themselves to access the system using the dedicated **New Operator Registration** portal. Registered credentials will immediately work on the login page.
+
 ## 🛠️ Application Workflow
 
 The application simulates a strict industrial production pipeline:
 
-1. **Authentication (Safety Checkpoint):** Operators must validate their credentials and pass robust password policies prior to line access.
-2. **Dashboard (Production Core):** The primary view offering real-time dynamic machine telemetry, active automated queue monitoring, and predictive failure alerts.
-3. **Assigning Jobs (Work Orders):** Operators build and queue new Work Orders, dictating priority scheduling and target part metrics.
-4. **Quality Assurance (Auditing):** Parts generated must pass a strict audit. Failed jobs automatically engage safety overrides.
-5. **Safety Control (LOTO Management):** If a machine is locked out due to a failed QA audit, engineers must navigate here to resolve the hazard physically, clear the LOTO tag, and free up the system.
-6. **Shift Report (Live Analytics):** A live recalculating summary of production run efficiencies driven by real historical data over the course of the shift.
+1. **Safety Checkpoint & Authentication:** Operators log in with their Employee ID and Access Code. 
+2. **Registration Portal:** A robust registration system where new operators can sign up. They must provide valid details with live validation:
+   - Name (letters only)
+   - Organizational email (`@fabtech.com`)
+   - 10-digit contact number
+   - Hierarchical Dropdowns: Department and specific Roles associated with that Department.
+   - Unique 6-character Employee ID.
+   - Live strict password validation (6-12 chars, uppercase, lowercase, special char, no spaces).
+3. **Dashboard (Production Core):** The primary view offering real-time dynamic machine telemetry, active automated queue monitoring, and predictive failure alerts.
+4. **Assigning Jobs (Work Orders):** Operators build and queue new Work Orders, dictating priority scheduling and target part metrics.
+5. **Quality Assurance (Auditing):** Parts generated must pass a strict audit. Failed jobs automatically engage safety overrides.
+6. **Safety Control (LOTO Management):** If a machine is locked out due to a failed QA audit, engineers must navigate here to resolve the hazard physically, clear the LOTO tag, and free up the system.
+7. **Shift Report (Live Analytics):** A live recalculating summary of production run efficiencies driven by real historical data over the course of the shift.
 
 ---
 *Built iteratively using React, Vite, and TailwindCSS.*
